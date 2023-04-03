@@ -1,8 +1,6 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Genome {
     private final List<MoveDirection> genes = new ArrayList<>();
@@ -15,7 +13,8 @@ public class Genome {
 
         i = random.nextInt(genomeSize);
     }
-    public Genome(Random random, Genome stronger, Genome weaker, float ratio, Side strongerSide) {
+
+    public Genome(Random random, Genome stronger, Genome weaker, float ratio, Side strongerSide, int mutationLower, int mutationUpper) {
         int splitPoint = Math.round(stronger.genes.size()*ratio);
 
         List<MoveDirection> strongerGenes = switch (strongerSide) {
@@ -39,7 +38,24 @@ public class Genome {
             }
         }
 
+        if(mutationUpper-mutationLower > 0) {
+            int mutatedGenes = random.nextInt(mutationUpper - mutationLower) + mutationLower;
+            List<Integer> mutations = randomUniqueNumbers(random, genes.size(), mutatedGenes);
+            for (Integer mutation : mutations) {
+                genes.set(mutation, MoveDirection.random(random));
+            }
+        }
+
         i = random.nextInt(stronger.genes.size());
+    }
+
+    private List<Integer> randomUniqueNumbers(Random random, int bound, int number) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for(int i = 0; i < bound; i++) {
+            list.add(i);
+        }
+        Collections.shuffle(list, random);
+        return list.subList(0, number);
     }
 
     public MoveDirection[] getGenes() {

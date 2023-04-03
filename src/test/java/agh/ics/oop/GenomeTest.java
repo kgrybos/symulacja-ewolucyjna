@@ -34,7 +34,7 @@ public class GenomeTest {
         assertEquals(MoveDirection.RIGHT, parent2.nextGene());
         assertEquals(MoveDirection.BACKWARD, parent2.nextGene());
 
-        Genome child = new Genome(random, parent1, parent2, 0.7F, Side.LEFT);
+        Genome child = new Genome(random, parent1, parent2, 0.7F, Side.LEFT, 0, 0);
 
         assertEquals(MoveDirection.BACKWARD_LEFT, child.nextGene());
         assertEquals(MoveDirection.LEFT, child.nextGene());

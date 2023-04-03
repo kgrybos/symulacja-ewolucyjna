@@ -87,7 +87,7 @@ public class Animal extends AbstractMapElement {
 
                 float ratio = ((float) energy) / (energy + weaker.energy);
                 Side side = Side.random(random);
-                Genome childGenome = new Genome(random, this.genome, weaker.genome, ratio, side);
+                Genome childGenome = new Genome(random, this.genome, weaker.genome, ratio, side, 0, 2);
                 new Builder(worldMap)
                         .setRandom(random)
                         .addAnimalEventObserverAll(animalEventObservers)

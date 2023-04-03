@@ -32,7 +32,7 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
         equatorGrassGenerator.generate(worldMap, 300);
         grassGenerator = equatorGrassGenerator;
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
             new Animal.Builder(worldMap)
                     .setRandom(random)
                     .addAnimalEventObserver(worldMap)
