@@ -41,11 +41,12 @@ public class Animal extends AbstractMapElement {
             default -> position;
         };
 
+        Vector2d oldPosition = position;
         if(worldMap.canMoveTo(newPosition)) {
-            Vector2d oldPosition = position;
             position = newPosition;
-            positionChanged(oldPosition, newPosition);
         }
+        positionChanged(oldPosition, newPosition);
+
     }
 
     public void addObserver(IPositionChangeObserver observer) {

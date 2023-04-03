@@ -6,7 +6,7 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 
 public class SimulationEngine implements IEngine, Runnable {
-    private final MoveDirection[] moves;
+    private MoveDirection[] moves = new MoveDirection[]{};
     private final List<Animal> animals;
     private final int moveDelay;
 
@@ -14,6 +14,16 @@ public class SimulationEngine implements IEngine, Runnable {
         this.moves = moves;
         this.animals = animals;
         this.moveDelay = moveDelay;
+    }
+
+    public SimulationEngine(List<Animal> animals, int moveDelay) {
+        this.animals = animals;
+        this.moveDelay = moveDelay;
+    }
+
+    public void setMoveDirections(String directions) {
+        String[] directionsSplitted = directions.split("\\s+");
+        moves = OptionsParser.parse(directionsSplitted);
     }
 
     @Override

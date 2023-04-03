@@ -1,7 +1,6 @@
 package agh.ics.oop;
 
 import agh.ics.oop.gui.GraphicalMapVisualizer;
-import javafx.scene.layout.GridPane;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +8,6 @@ import java.util.Map;
 public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     protected final Map<Vector2d, IMapElement> mapElements = new HashMap<>();
     private final MapVisualizer mapVisualizer = new MapVisualizer(this);
-    private final GraphicalMapVisualizer graphicalMapVisualizer = new GraphicalMapVisualizer(this);
 
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
@@ -41,13 +39,11 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         return mapElements.get(position);
     }
 
-    protected abstract Vector2d lowerLeft();
-    protected abstract Vector2d upperRight();
+    public abstract Vector2d lowerLeft();
+    public abstract Vector2d upperRight();
 
     @Override
     public String toString() {
         return mapVisualizer.draw(lowerLeft(), upperRight());
     }
-
-    public GridPane render() { return graphicalMapVisualizer.render(lowerLeft(), upperRight()); }
 }

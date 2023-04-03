@@ -11,7 +11,7 @@ import javafx.scene.layout.RowConstraints;
 
 public class GraphicalMapVisualizer {
     private final IWorldMap map;
-    private final GridPane gridPane;
+    public final GridPane gridPane;
     private static final int ROW_SIZE = 50;
     private static final int COLUMN_SIZE = 50;
     public GraphicalMapVisualizer(IWorldMap map) {
@@ -19,7 +19,7 @@ public class GraphicalMapVisualizer {
         gridPane = new GridPane();
     }
 
-    public GridPane render(Vector2d lowerLeft, Vector2d upperRight) {
+    public void render() {
         gridPane.setGridLinesVisible(false);
         gridPane.getChildren().clear();
         gridPane.getRowConstraints().clear();
@@ -31,6 +31,9 @@ public class GraphicalMapVisualizer {
         gridPane.add(legend, 0, 0);
         gridPane.getColumnConstraints().add(new ColumnConstraints(COLUMN_SIZE));
         gridPane.getRowConstraints().add(new RowConstraints(ROW_SIZE));
+
+        Vector2d upperRight = map.upperRight();
+        Vector2d lowerLeft = map.lowerLeft();
 
         int numberOfColumns = upperRight.x - lowerLeft.x+1;
         int numberOfRows = upperRight.y - lowerLeft.y+1;
@@ -65,7 +68,5 @@ public class GraphicalMapVisualizer {
                 }
             }
         }
-
-        return gridPane;
     }
 }
