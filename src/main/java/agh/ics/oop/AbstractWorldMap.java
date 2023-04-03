@@ -9,15 +9,15 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver {
     protected final Multimap<Vector2d, AbstractMapElement> mapElements = ArrayListMultimap.create();
     public final int width;
     public final int height;
-    public final Vector2d lowerLeft;
-    public final Vector2d upperRight;
+    public final Boundary boundary;
 
     public AbstractWorldMap(int width, int height) {
         this.width = width;
         this.height = height;
 
-        lowerLeft = new Vector2d(0, 0);
-        upperRight  = new Vector2d(width-1, height-1);
+        Vector2d lowerLeft = new Vector2d(0, 0);
+        Vector2d upperRight  = new Vector2d(width-1, height-1);
+        boundary = new Boundary(lowerLeft, upperRight);
     }
 
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition, AbstractMapElement element) {
@@ -27,7 +27,7 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver {
 
     public boolean place(AbstractMapElement element) {
         Vector2d position = element.getPosition();
-        if(isInsideMap(position)) {
+        if(boundary.isInside(position)) {
             if(element instanceof Animal animal) {
                 animal.addObserver(this);
             }
@@ -58,10 +58,6 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver {
                         .findFirst()
                         .orElse(null)
                 );
-    }
-
-    public boolean isInsideMap(Vector2d position) {
-        return position.follows(lowerLeft) && position.precedes(upperRight);
     }
 
     public abstract PosDir getPosDirToMove(AbstractMapElement element, PosDir requestedPosDir);

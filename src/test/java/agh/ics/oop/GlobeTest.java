@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GlobeTest {
     @Test
     void occupationTests() {
-        Globe map = new Globe(5, 5, 10, 1);
+        Globe map = new Globe(5, 5);
 
         Animal animal = new Animal(map, new Vector2d(1, 2));
         map.place(animal);
@@ -15,14 +15,11 @@ public class GlobeTest {
         assertTrue(map.isOccupied(new Vector2d(1, 2)));
         assertFalse(map.isOccupied(new Vector2d(1, 3)));
         assertFalse(map.isOccupied(new Vector2d(4, 0)));
-
-        assertTrue(map.isOccupied(new Vector2d(1, 4)));
-        assertTrue(map.isOccupied(new Vector2d(2, 1)));
     }
 
     @Test
     void objectAtTest() {
-        Globe map = new Globe(5, 5, 10, 1);
+        Globe map = new Globe(5, 5);
 
         Animal animal1 = new Animal(map, new Vector2d(1, 2));
         map.place(animal1);
@@ -36,13 +33,11 @@ public class GlobeTest {
         assertNull(map.objectAt(new Vector2d(9, 9)));
 
         assertNotEquals(animal1, map.objectAt(new Vector2d(1, 3)));
-
-        assertTrue(map.objectAt(new Vector2d(1, 4)) instanceof Grass);
     }
 
     @Test
     void LeftRightBorderTest() {
-        Globe map = new Globe(5, 5, 10, 1);
+        Globe map = new Globe(5, 5);
 
         Animal animal1 = new Animal(map, new Vector2d(1, 2));
         map.place(animal1);
@@ -58,7 +53,7 @@ public class GlobeTest {
     }
     @Test
     void UpDownBorderTest() {
-        Globe map = new Globe(5, 5, 10, 1);
+        Globe map = new Globe(5, 5);
 
         Animal animal1 = new Animal(map, new Vector2d(1, 2));
         map.place(animal1);

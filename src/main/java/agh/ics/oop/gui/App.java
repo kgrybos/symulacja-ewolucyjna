@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class App extends Application {
     private Globe worldMap;
@@ -24,25 +25,24 @@ public class App extends Application {
     public void init() throws Exception {
         super.init();
 
-        try {
-//            MoveDirection[] directions = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"});
-            Vector2d[] positions = {new Vector2d(3, 4)};//, new Vector2d(1, 4)};
+        Vector2d[] positions = {new Vector2d(3, 4)};//, new Vector2d(1, 4)};
 
-            worldMap = new Globe(10, 10, 1);
-            graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
+        worldMap = new Globe(50, 50);
+        graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
 
-            List<Animal> animals = new ArrayList<>();
-            for (Vector2d position : positions) {
-                Animal newAnimal = new Animal(worldMap, position);
-                worldMap.place(newAnimal);
-                newAnimal.addObserver(graphicalMapVisualizer);
-                animals.add(newAnimal);
-            }
-
-            engine = new SimulationEngine(animals, 300);
-        } catch (IllegalArgumentException exception) {
-            System.out.println(exception.getMessage());
+        List<Animal> animals = new ArrayList<>();
+        for (Vector2d position : positions) {
+            Animal newAnimal = new Animal(worldMap, position);
+            worldMap.place(newAnimal);
+            newAnimal.addObserver(graphicalMapVisualizer);
+            animals.add(newAnimal);
         }
+
+        Random random = new Random();
+        EquatorGrassGenerator equatorGrassGenerator = new EquatorGrassGenerator(random, worldMap.width, worldMap.height);
+        equatorGrassGenerator.generate(worldMap, 300);
+
+        engine = new SimulationEngine(animals, 300);
     }
 
     public void start(Stage primaryStage) {
