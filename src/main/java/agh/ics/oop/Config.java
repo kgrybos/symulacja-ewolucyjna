@@ -30,7 +30,8 @@ public record Config (
         int maxMutations,
         MutatorType mutator,
         int genomeSize,
-        AnimalBehaviourType animalBehaviour
+        AnimalBehaviourType animalBehaviour,
+        boolean saveStats
 ) {
     public static Config getFromFile(String configName) {
         try {
@@ -85,7 +86,8 @@ public record Config (
                 maxMutations,
                 mutator,
                 genomeSize,
-                animalBehaviour
+                animalBehaviour,
+                false
         );
     }
 }

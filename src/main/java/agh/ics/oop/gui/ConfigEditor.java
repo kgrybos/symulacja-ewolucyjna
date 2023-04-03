@@ -42,6 +42,7 @@ public class ConfigEditor extends VBox {
     private final ComboBox<MutatorType> mutatorField = new ComboBox<>();
     private final TextField genomeSizeField = new TextField();
     private final ComboBox<AnimalBehaviourType> animalBehaviourField = new ComboBox<>();
+    private final CheckBox saveStatsCheckbox = new CheckBox("Zapisz statystyki symulacji do pliku CSV");
     private final HashMap<TextField, Range> correctValuesRange = new HashMap<>();
     private final List<TextField> textfields = Arrays.asList(
             mapWidthField,
@@ -164,6 +165,8 @@ public class ConfigEditor extends VBox {
             }
         });
 
+        saveStatsCheckbox.setIndeterminate(false);
+
         Button startButton = new Button("Uruchom symulację");
         startButton.setPrefWidth(200);
         startButton.setOnAction(event -> {
@@ -184,6 +187,7 @@ public class ConfigEditor extends VBox {
         this.setPadding(new Insets(40));
         this.getChildren().add(configChoice);
         this.getChildren().add(grid);
+        this.getChildren().add(saveStatsCheckbox);
         this.getChildren().add(startButton);
     }
 
@@ -224,7 +228,8 @@ public class ConfigEditor extends VBox {
             Integer.parseInt(maxMutationsField.getText()),
             mutatorField.getValue(),
             Integer.parseInt(genomeSizeField.getText()),
-            animalBehaviourField.getValue()
+            animalBehaviourField.getValue(),
+            saveStatsCheckbox.isSelected()
         );
     }
 

@@ -185,8 +185,6 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
                     sleep(dayDelay);
                 }
             }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        } catch (InterruptedException ignored) {}
     }
 }
