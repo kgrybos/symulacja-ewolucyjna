@@ -11,14 +11,16 @@ import javafx.scene.layout.RowConstraints;
 
 public class GraphicalMapVisualizer {
     private final IWorldMap map;
+    private final GridPane gridPane;
     private static final int ROW_SIZE = 50;
     private static final int COLUMN_SIZE = 50;
     public GraphicalMapVisualizer(IWorldMap map) {
         this.map = map;
+        gridPane = new GridPane();
     }
 
     public GridPane render(Vector2d lowerLeft, Vector2d upperRight) {
-        GridPane gridPane = new GridPane();
+        gridPane.getChildren().clear();
         gridPane.setGridLinesVisible(true);
 
         Label legend = new Label("y/x");
