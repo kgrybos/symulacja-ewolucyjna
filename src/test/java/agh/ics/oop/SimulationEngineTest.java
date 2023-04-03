@@ -11,7 +11,7 @@ public class SimulationEngineTest {
     @Test
     void RunTest() {
         MoveDirection[] directions = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"});
-        IWorldMap map = new RectangularMap(2, 5);
+        AbstractWorldMap map = new RectangularMap(2, 5);
         Vector2d[] positions = { new Vector2d(0,2), new Vector2d(1,4) };
         List<Animal> animals = new ArrayList<>();
         for(Vector2d position : positions) {
@@ -39,7 +39,7 @@ public class SimulationEngineTest {
     @Test
     void collisionTest() {
         MoveDirection[] directions = OptionsParser.parse(new String[]{"r", "l", "f", "f", "f", "f"});
-        IWorldMap map = new RectangularMap(6, 1);
+        AbstractWorldMap map = new RectangularMap(6, 1);
         Vector2d[] positions = { new Vector2d(2,0), new Vector2d(3,0) };
         List<Animal> animals = new ArrayList<>();
         for(Vector2d position : positions) {
@@ -63,7 +63,7 @@ public class SimulationEngineTest {
     @Test
     void borderTest() {
         MoveDirection[] directions = OptionsParser.parse(new String[]{"f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f"});
-        IWorldMap map = new RectangularMap(5, 5);
+        AbstractWorldMap map = new RectangularMap(5, 5);
         Vector2d[] positions = { new Vector2d(0,0) };
         List<Animal> animals = new ArrayList<>();
         for(Vector2d position : positions) {

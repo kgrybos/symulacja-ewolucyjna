@@ -5,16 +5,16 @@ import java.util.List;
 
 public class Animal extends AbstractMapElement {
     private MapDirection orientation = MapDirection.NORTH;
-    private final IWorldMap worldMap;
+    private final AbstractWorldMap worldMap;
 
     private final List<IPositionChangeObserver> positionChangeObservers = new ArrayList<>();
 
-    public Animal(IWorldMap map) {
+    public Animal(AbstractWorldMap map) {
         worldMap = map;
         position = new Vector2d(2, 2);
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition) {
+    public Animal(AbstractWorldMap map, Vector2d initialPosition) {
         worldMap = map;
         position = initialPosition;
     }
@@ -45,7 +45,7 @@ public class Animal extends AbstractMapElement {
         if(worldMap.canMoveTo(newPosition)) {
             position = newPosition;
         }
-        positionChanged(oldPosition, newPosition);
+        positionChanged(oldPosition, position);
 
     }
 
@@ -59,7 +59,7 @@ public class Animal extends AbstractMapElement {
 
     private void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
         for(IPositionChangeObserver observer : positionChangeObservers) {
-            observer.positionChanged(oldPosition, newPosition);
+            observer.positionChanged(oldPosition, newPosition, this);
         }
     }
 

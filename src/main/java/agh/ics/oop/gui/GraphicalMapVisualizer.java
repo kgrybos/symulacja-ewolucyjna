@@ -1,7 +1,7 @@
 package agh.ics.oop.gui;
 
+import agh.ics.oop.AbstractWorldMap;
 import agh.ics.oop.IMapElement;
-import agh.ics.oop.IWorldMap;
 import agh.ics.oop.Vector2d;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
@@ -10,11 +10,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 public class GraphicalMapVisualizer {
-    private final IWorldMap map;
+    private final AbstractWorldMap map;
     public final GridPane gridPane;
     private static final int ROW_SIZE = 50;
     private static final int COLUMN_SIZE = 50;
-    public GraphicalMapVisualizer(IWorldMap map) {
+    public GraphicalMapVisualizer(AbstractWorldMap map) {
         this.map = map;
         gridPane = new GridPane();
     }
@@ -32,8 +32,8 @@ public class GraphicalMapVisualizer {
         gridPane.getColumnConstraints().add(new ColumnConstraints(COLUMN_SIZE));
         gridPane.getRowConstraints().add(new RowConstraints(ROW_SIZE));
 
-        Vector2d upperRight = map.upperRight();
-        Vector2d lowerLeft = map.lowerLeft();
+        Vector2d upperRight = map.upperRight;
+        Vector2d lowerLeft = map.lowerLeft;
 
         int numberOfColumns = upperRight.x - lowerLeft.x+1;
         int numberOfRows = upperRight.y - lowerLeft.y+1;
@@ -59,7 +59,7 @@ public class GraphicalMapVisualizer {
             for(int row = 0; row < numberOfRows; row++) {
                 Vector2d position = new Vector2d(lowerLeft.x + column, upperRight.y - row );
                 if(map.isOccupied(position)) {
-                    IMapElement element = (IMapElement) map.objectAt(position);
+                    IMapElement element = map.objectAt(position);
                     if(element != null) {
                         GuiElementBox geb = new GuiElementBox(element.getImageFilename(), element.toString());
                         GridPane.setHalignment(geb, HPos.CENTER);

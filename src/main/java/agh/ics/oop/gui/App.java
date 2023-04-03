@@ -30,7 +30,7 @@ public class App extends Application implements IPositionChangeObserver {
 //            MoveDirection[] directions = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"});
             Vector2d[] positions = {new Vector2d(3, 4), new Vector2d(1, 4)};
 
-            worldMap = new GrassField(10);
+            worldMap = new GrassField(15, 15, 10);
             graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
 
             List<Animal> animals = new ArrayList<>();
@@ -77,7 +77,7 @@ public class App extends Application implements IPositionChangeObserver {
     }
 
     @Override
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition, IMapElement element) {
         Platform.runLater(() -> {
             graphicalMapVisualizer.render();
             primaryStage.sizeToScene();
