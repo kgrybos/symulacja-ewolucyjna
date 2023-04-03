@@ -96,11 +96,12 @@ public class Animal extends AbstractMapElement {
                 float ratio = ((float) energy) / (energy + weaker.energy);
                 Side side = Side.random(random);
                 Genome childGenome = new Genome(random, this.genome, weaker.genome, ratio, side, config);
+                PosDir childPosDir = posDir.changeDirection(MapDirection.random(random));
                 new Builder(worldMap, config)
                         .setRandom(random)
                         .addAnimalEventObserverAll(animalEventObservers)
                         .setEnergy(config.energyForNewborn()*2)
-                        .setPosDir(posDir)
+                        .setPosDir(childPosDir)
                         .setBirthday(birthday + daysAlive)
                         .buildBorn(childGenome);
             }

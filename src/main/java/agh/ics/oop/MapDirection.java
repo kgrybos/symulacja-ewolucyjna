@@ -1,5 +1,7 @@
 package agh.ics.oop;
 
+import java.util.Random;
+
 public enum MapDirection {
     NORTH,
     NORTH_EAST,
@@ -57,4 +59,9 @@ public enum MapDirection {
             case NORTH_WEST -> new Vector2d(-1, 1);
         };
     }
+
+    public static MapDirection random(Random random) {
+        return values()[random.nextInt(values().length)];
+    }
+
 }
