@@ -8,6 +8,7 @@ import static java.lang.Math.sqrt;
 public class GrassField extends AbstractWorldMap {
 
     private final int tuftNumber;
+    private final MapBoundary mapBoundary = new MapBoundary();
 
     GrassField(int tuftNumber, long seed) {
         this.tuftNumber = tuftNumber;
@@ -17,12 +18,21 @@ public class GrassField extends AbstractWorldMap {
             int x = rand.nextInt((int) sqrt(tuftNumber*10)+1);
             int y = rand.nextInt((int) sqrt(tuftNumber*10)+1);
             Vector2d position = new Vector2d(x,y);
-            mapElements.put(position, new Grass(position));
+            Grass grass = new Grass(position);
+            mapElements.put(position, grass);
+            mapBoundary.put(grass);
         }
     }
 
     GrassField(int tuftNumber) {
         this(tuftNumber, new Date().getTime());
+    }
+
+    public boolean place(Animal animal) {
+        boolean result = super.place(animal);
+        mapBoundary.put(animal);
+        animal.addObserver(this);
+        return result;
     }
 
     @Override
@@ -32,21 +42,11 @@ public class GrassField extends AbstractWorldMap {
 
     @Override
     protected Vector2d lowerLeft() {
-        return mapElements
-                .keySet()
-                .stream()
-                .reduce(Vector2d::lowerLeft)
-                .orElse(new Vector2d(-8, -8))
-                .subtract(new Vector2d(1, 1));
+        return mapBoundary.lowerLeft().subtract(new Vector2d(1, 1));
     }
 
     @Override
     protected Vector2d upperRight() {
-        return mapElements
-                .keySet()
-                .stream()
-                .reduce(Vector2d::upperRight)
-                .orElse(new Vector2d(8, 8))
-                .add(new Vector2d(1, 1));
+        return mapBoundary.upperRight().add(new Vector2d(1, 1));
     }
 }
