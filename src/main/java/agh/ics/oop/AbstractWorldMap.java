@@ -53,6 +53,35 @@ public abstract class AbstractWorldMap implements IElementEventObserver {
                 .findFirst();
     }
 
+    public int getFood(Animal animal) {
+        Comparator<Animal> comparator = Comparator.comparing(Animal::getEnergy)
+                        .thenComparing(Animal::getDaysAlive)
+                        .thenComparing(Animal::getNumberOfChildren)
+                        .thenComparing(System::identityHashCode);
+
+        Animal strongest = mapElements
+                .get(animal.getPosition())
+                .stream()
+                .filter(Animal.class::isInstance)
+                .map(Animal.class::cast)
+                .max(comparator)
+                .orElseThrow(() -> new IllegalArgumentException("Rozbieżność pozycji w Animal i WorldMap"));
+
+        Optional<Grass> grass = mapElements
+                .get(animal.getPosition())
+                .stream()
+                .filter(Grass.class::isInstance)
+                .map(Grass.class::cast)
+                .findAny();
+
+        if(strongest == animal && grass.isPresent()) {
+            grass.get().die();
+            return grass.get().getEnergy();
+        }
+
+        return 0;
+    }
+
     public abstract PosDir getPosDirToMove(AbstractMapElement element, MoveDirection move);
 
     public void addPositionsChangedObserver(IPositionsChangedObserver observer) {

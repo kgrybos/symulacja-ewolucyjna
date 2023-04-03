@@ -35,6 +35,12 @@ public class Animal extends AbstractMapElement {
     public int getEnergy() {
         return energy;
     }
+    public int getDaysAlive() {
+        return daysAlive;
+    }
+    public int getNumberOfChildren() {
+        return numberOfChildren;
+    }
 
     @Override
     public String toString() {
@@ -63,7 +69,9 @@ public class Animal extends AbstractMapElement {
     }
 
     public void eat() {
-
+        int amount = worldMap.getFood(this);
+        energy += amount;
+        grassEaten += amount;
     }
 
     public Animal reproduce(Animal weaker) {

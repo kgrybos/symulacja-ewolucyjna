@@ -42,7 +42,8 @@ public class EquatorGrassGenerator implements GrassGenerator {
             }
 
             if(map.objectAt(position, Grass.class).isEmpty()) {
-                new Grass.Builder(position)
+                //TODO: Get from config
+                new Grass.Builder(position, 10)
                         .addGrassEventObserver(map)
                         .build();
             }
