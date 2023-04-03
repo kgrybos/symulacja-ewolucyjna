@@ -42,6 +42,9 @@ public class Animal extends AbstractMapElement {
     public int getNumberOfChildren() {
         return numberOfChildren;
     }
+    public MoveDirection[] getGenes() {
+        return genome.getGenes();
+    }
 
     @Override
     public String toString() {

@@ -1,9 +1,6 @@
 package agh.ics.oop.GrassGenerators;
 
-import agh.ics.oop.Animal;
-import agh.ics.oop.Config;
-import agh.ics.oop.Grass;
-import agh.ics.oop.Vector2d;
+import agh.ics.oop.*;
 import agh.ics.oop.WorldMaps.AbstractWorldMap;
 import agh.ics.oop.observers.DeathEvent;
 import agh.ics.oop.observers.ElementEvent;
@@ -30,7 +27,7 @@ public class ToxicCorpsesGrassGenerator implements GrassGenerator, IElementEvent
     }
 
     @Override
-    public void generate(AbstractWorldMap map, int number) {
+    public void generate(AbstractWorldMap map, SimulationEngine engine, int number) {
         List<Map.Entry<Vector2d, Integer>> fields = new ArrayList<>(corpses.entrySet());
         Collections.shuffle(fields, random);
         List<Vector2d> sortedFields = fields
@@ -55,6 +52,7 @@ public class ToxicCorpsesGrassGenerator implements GrassGenerator, IElementEvent
             if(map.objectAt(position, Grass.class).isEmpty()) {
                 new Grass.Builder(position, energyFromGrass)
                         .addGrassEventObserver(map)
+                        .addGrassEventObserver(engine)
                         .build();
             }
         }

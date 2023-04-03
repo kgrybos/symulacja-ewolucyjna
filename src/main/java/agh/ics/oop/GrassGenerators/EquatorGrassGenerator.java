@@ -34,7 +34,7 @@ public class EquatorGrassGenerator implements GrassGenerator {
 
     }
     @Override
-    public void generate(AbstractWorldMap map, int number) {
+    public void generate(AbstractWorldMap map, SimulationEngine engine, int number) {
         for(int i = 0; i < number; i++) {
             Vector2d position;
             double regionChoice = random.nextDouble();
@@ -49,6 +49,7 @@ public class EquatorGrassGenerator implements GrassGenerator {
             if(map.objectAt(position, Grass.class).isEmpty()) {
                 new Grass.Builder(position, energyFromGrass)
                         .addGrassEventObserver(map)
+                        .addGrassEventObserver(engine)
                         .build();
             }
         }

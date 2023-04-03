@@ -19,7 +19,10 @@ public class SimulationWindow {
         AnimalStatsBox animalStatsBox = new AnimalStatsBox();
         animalStatsBox.setChoices(engine.getAnimals());
 
-        HBox mainContainer = new HBox(animalStatsBox, graphicalMapVisualizer.gridPane);
+        SimulationStatsBox simulationStatsBox = new SimulationStatsBox();
+        engine.addObserver(simulationStatsBox);
+
+        HBox mainContainer = new HBox(animalStatsBox, graphicalMapVisualizer.gridPane, simulationStatsBox);
         mainContainer.setAlignment(Pos.CENTER);
         mainContainer.setSpacing(20);
 

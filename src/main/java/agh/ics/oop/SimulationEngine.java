@@ -7,24 +7,28 @@ import agh.ics.oop.WorldMaps.AbstractWorldMap;
 import agh.ics.oop.WorldMaps.Globe;
 import agh.ics.oop.WorldMaps.HellPortal;
 import agh.ics.oop.gui.GraphicalMapVisualizer;
-import agh.ics.oop.observers.BirthEvent;
-import agh.ics.oop.observers.ElementEvent;
-import agh.ics.oop.observers.IElementEventObserver;
+import agh.ics.oop.observers.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 
 public class SimulationEngine implements Runnable, IElementEventObserver {
     private final List<Animal> animals = new ArrayList<>();
+    private final List<ISimulationStatsObserver> simulationStatsObservers = new ArrayList<>();
     private final int dayDelay;
     private boolean paused = true;
     private final AbstractWorldMap worldMap;
     private final GraphicalMapVisualizer graphicalMapVisualizer;
     private GrassGenerator grassGenerator;
     private final Config config;
+    private int grassNumber;
+    private int sumOfDeadLifetime;
+    private int numberDead;
 
     public SimulationEngine(int dayDelay, Config config) {
         this.dayDelay = dayDelay;
@@ -52,7 +56,7 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
             case EQUATOR -> grassGenerator = new EquatorGrassGenerator(random, config, worldMap.width, worldMap.height);
             case TOXIC -> grassGenerator = new ToxicCorpsesGrassGenerator(random, config, worldMap.width, worldMap.height);
         }
-        grassGenerator.generate(worldMap, config.initialGrassNumber());
+        grassGenerator.generate(worldMap, this, config.initialGrassNumber());
 
         if(grassGenerator instanceof ToxicCorpsesGrassGenerator toxicCorpsesGrassGenerator) {
             for(Animal animal : animals) {
@@ -84,7 +88,9 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
             animal.reproduce();
         }
 
-        grassGenerator.generate(worldMap, config.dailyNewGrass());
+        grassGenerator.generate(worldMap, this, config.dailyNewGrass());
+
+        notifySimulationStatsObservers();
     }
 
     @Override
@@ -92,7 +98,61 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
         if(elementEvent instanceof BirthEvent event) {
             if(event.element instanceof Animal animal) {
                 animals.add(animal);
+            } else if(event.element instanceof Grass) {
+                grassNumber += 1;
             }
+        } else if(elementEvent instanceof DeathEvent deathEvent) {
+            if(deathEvent.element instanceof Animal animal) {
+                numberDead += 1;
+                sumOfDeadLifetime += animal.getDaysAlive();
+            } else if(deathEvent.element instanceof Grass) {
+                grassNumber -= 1;
+            }
+        }
+    }
+
+    public SimulationStats getStats() {
+        int animalNumber = animals.size();
+        int freeFields = worldMap.width*worldMap.height-animalNumber-grassNumber;
+
+        List<MoveDirection[]> mostPopularGenomes = animals
+                .stream()
+                .map(Animal::getGenes)
+                .collect(Collectors.groupingBy(el -> el,
+                        Collectors.counting()))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<MoveDirection[], Long>comparingByValue().reversed())
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .toList();
+
+        double averageEnergy = animals
+                .stream()
+                .mapToInt(Animal::getEnergy)
+                .average()
+                .orElse(0);
+
+        double averageLifetime = numberDead > 0 ? (double) sumOfDeadLifetime/numberDead : 0;
+
+        return new SimulationStats(
+                animalNumber,
+                grassNumber,
+                freeFields,
+                mostPopularGenomes,
+                averageEnergy,
+                averageLifetime
+        );
+    }
+    public void addObserver(ISimulationStatsObserver observer) {
+        simulationStatsObservers.add(observer);
+    }
+    public void removeObserver(ISimulationStatsObserver observer) {
+        simulationStatsObservers.remove(observer);
+    }
+    public void notifySimulationStatsObservers() {
+        for(ISimulationStatsObserver observer : simulationStatsObservers) {
+            observer.updateSimulationStats(getStats());
         }
     }
 
