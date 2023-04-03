@@ -2,11 +2,13 @@ package agh.ics.oop.gui;
 
 import agh.ics.oop.*;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class App extends Application {
@@ -45,11 +47,37 @@ public class App extends Application {
 
         graphicalMapVisualizer.full_render();
 
+        AnimalStatsBox animalStatsBox = new AnimalStatsBox();
+        animalStatsBox.setChoices(engine.getAnimals());
+
+        HBox mainContainer = new HBox(animalStatsBox, graphicalMapVisualizer.gridPane);
+        mainContainer.setAlignment(Pos.CENTER);
+        mainContainer.setSpacing(20);
+
+        Button startStopButton = new Button("Start");
+        startStopButton.setPrefWidth(250);
+
         Thread engineThread = new Thread(engine);
         engineThread.start();
+        startStopButton.setOnAction(event -> {
+            if(engine.isPaused()) {
+                engine.resume();
+                animalStatsBox.confirmChoice();
+            } else {
+                engine.pause();
+                animalStatsBox.setChoices(engine.getAnimals());
+            }
+            startStopButton.setText(engine.isPaused() ? "Start" : "Stop");
+        });
 
-        Scene scene = new Scene(graphicalMapVisualizer.gridPane);
+        VBox root = new VBox(20);
+        root.getChildren().addAll(mainContainer, startStopButton);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(20));
+
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Simulation");
         primaryStage.show();
     }
 }

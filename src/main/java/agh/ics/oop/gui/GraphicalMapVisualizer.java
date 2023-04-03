@@ -5,9 +5,8 @@ import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.io.InputStream;
 import java.util.Objects;
@@ -26,6 +25,7 @@ public class GraphicalMapVisualizer implements IAnimalEventObserver {
         gridPane = new GridPane();
         gridPane.setHgap(0);
         gridPane.setVgap(0);
+        gridPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
         double cellSize;
         if(map.width > map.height) {

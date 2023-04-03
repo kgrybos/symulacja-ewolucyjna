@@ -8,6 +8,7 @@ import static java.lang.Thread.sleep;
 public class SimulationEngine implements Runnable, IAnimalEventObserver {
     private final List<Animal> animals = new ArrayList<>();
     private final int dayDelay;
+    private boolean paused = true;
 
     public SimulationEngine(int dayDelay) {
         this.dayDelay = dayDelay;
@@ -31,19 +32,41 @@ public class SimulationEngine implements Runnable, IAnimalEventObserver {
         }
     }
 
+    public Animal[] getAnimals() {
+        return animals.toArray(new Animal[]{});
+    }
+
+    public boolean isPaused() {
+        return this.paused;
+    }
+
+    public void pause() {
+        paused = true;
+    }
+
+    public synchronized void resume() {
+        paused = false;
+        notify();
+    }
+
     @Override
-    public void run() {
-        int i = 0;
-        while(true) {
-            System.out.println("Dzień: " + i);
-            simulateDay();
-            i += 1;
-            try {
-                //TODO: Przemyśleć to
-                sleep(dayDelay);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+    public synchronized void run() {
+        try {
+            wait();
+            int dayNumber = 0;
+            while(true) {
+                System.out.println("Dzień: " + dayNumber);
+                simulateDay();
+                if (paused) {
+                    wait();
+                } else {
+                    sleep(dayDelay);
+                }
+
+                dayNumber += 1;
             }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

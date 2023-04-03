@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class Animal extends AbstractMapElement {
     private final List<IAnimalEventObserver> animalEventObservers;
@@ -12,6 +9,11 @@ public class Animal extends AbstractMapElement {
     private final Random random;
     private final Genome genome;
     private int energy;
+    private int daysAlive = 0;
+    private int numberOfChildren = 0;
+    private int grassEaten = 0;
+    private final int birthday;
+
 
     private Animal(Builder builder) {
         this.worldMap = builder.worldMap;
@@ -23,8 +25,9 @@ public class Animal extends AbstractMapElement {
         //TODO: Get value from config
         this.energy = Objects.requireNonNullElseGet(builder.energy, () -> random.nextInt(10)+15);
         this.genome = Objects.requireNonNullElseGet(builder.genome, () -> new Genome(random, builder.genomeSize));
+        this.birthday = Objects.requireNonNullElse(builder.birthday, 0);
 
-        notifyObservers(new BirthEvent(this.posDir.position(), this));
+        notifyEventObservers(new BirthEvent(this.posDir.position(), this));
     }
 
     public int getEnergy() {
@@ -33,29 +36,34 @@ public class Animal extends AbstractMapElement {
 
     @Override
     public String toString() {
-        return "Z " + posDir.position();
+        return "Zwierze " + posDir.position();
     }
 
     public void wakeUp() {
         energy -= 1;
         if(energy == 0) {
-            notifyObservers(new DeathEvent(posDir.position(), this));
+            notifyEventObservers(new DeathEvent(posDir.position(), this));
         }
+        daysAlive += 1;
+        notifyStatsObservers(getStats());
     }
 
     public void move() {
         Vector2d oldPosition = posDir.position();
         posDir = worldMap.getPosDirToMove(this, genome.nextGene());
-        notifyObservers(new PositionChangedEvent(oldPosition, posDir.position(), this));
+        notifyEventObservers(new PositionChangedEvent(oldPosition, posDir.position(), this));
     }
 
     public void move(MoveDirection move) {
         Vector2d oldPosition = posDir.position();
         posDir = worldMap.getPosDirToMove(this, move);
-        notifyObservers(new PositionChangedEvent(oldPosition, posDir.position(), this));
+        notifyEventObservers(new PositionChangedEvent(oldPosition, posDir.position(), this));
     }
 
     public Animal reproduce(Animal weaker) {
+        this.numberOfChildren += 1;
+        weaker.numberOfChildren += 1;
+
         float ratio = ((float) energy)/(energy + weaker.energy);
         Side side = Side.random(random);
         Genome childGenome = new Genome(random, this.genome, weaker.genome, ratio, side);
@@ -63,20 +71,46 @@ public class Animal extends AbstractMapElement {
                 .setRandom(random)
                 .addAnimalEventObserverAll(animalEventObservers)
                 .setPosDir(posDir)
+                .setBirthday(birthday+daysAlive)
                 .buildBorn(childGenome);
     }
 
-    public void addObserver(IAnimalEventObserver observer) {
+    public void addEventObserver(IAnimalEventObserver observer) {
         animalEventObservers.add(observer);
     }
 
-    public void removeObserver(IAnimalEventObserver observer) {
+    public void removeEventObserver(IAnimalEventObserver observer) {
         animalEventObservers.remove(observer);
     }
+    public void addStatsObserver(IAnimalStatsObserver observer) {
+        animalStatsObservers.add(observer);
+    }
 
-    private void notifyObservers(AnimalEvent animalEvent) {
+    public void removeStatsObserver(IAnimalStatsObserver observer) {
+        animalStatsObservers.remove(observer);
+    }
+
+    private void notifyEventObservers(AnimalEvent animalEvent) {
         for(IAnimalEventObserver observer : animalEventObservers) {
             observer.animalEvent(animalEvent);
+        }
+    }
+
+    public AnimalStats getStats() {
+        return new AnimalStats(
+                genome.getGenes(),
+                genome.getActiveGene(),
+                energy,
+                grassEaten,
+                numberOfChildren,
+                daysAlive,
+                energy <= 0 ? Optional.of(birthday+daysAlive) : Optional.empty()
+        );
+    }
+
+    private void notifyStatsObservers(AnimalStats animalStats) {
+        for(IAnimalStatsObserver observer : animalStatsObservers) {
+            observer.updateAnimalStats(animalStats);
         }
     }
 
@@ -92,6 +126,7 @@ public class Animal extends AbstractMapElement {
         private Genome genome;
         private PosDir posDir;
         private Integer energy;
+        private Integer birthday;
         private final List<IAnimalEventObserver> animalEventObservers = new ArrayList<>();
         private final List<IAnimalStatsObserver> animalStatsObservers = new ArrayList<>();
 
@@ -128,6 +163,11 @@ public class Animal extends AbstractMapElement {
 
         public Builder setEnergy(int energy) {
             this.energy = energy;
+            return this;
+        }
+
+        public Builder setBirthday(int birthday) {
+            this.birthday = birthday;
             return this;
         }
 

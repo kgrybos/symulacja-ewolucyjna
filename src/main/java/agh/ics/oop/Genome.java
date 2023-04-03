@@ -1,24 +1,19 @@
 package agh.ics.oop;
 
-import com.google.common.collect.Iterators;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 public class Genome {
     private final List<MoveDirection> genes = new ArrayList<>();
-    private final Iterator<MoveDirection> genesIterator = Iterators.cycle(genes);
+    private int i;
 
     public Genome(Random random, int genomeSize) {
         for(int i = 0; i < genomeSize; i++) {
             genes.add(MoveDirection.random(random));
         }
 
-        for(int i = 0; i < random.nextInt(genes.size()); i++) {
-            genesIterator.next();
-        }
+        i = random.nextInt(genomeSize);
     }
     public Genome(Random random, Genome stronger, Genome weaker, float ratio, Side strongerSide) {
         int splitPoint = Math.round(stronger.genes.size()*ratio);
@@ -44,12 +39,20 @@ public class Genome {
             }
         }
 
-        for(int i = 0; i < random.nextInt(genes.size()); i++) {
-            genesIterator.next();
-        }
+        i = random.nextInt(stronger.genes.size());
+    }
+
+    public MoveDirection[] getGenes() {
+        return genes.toArray(new MoveDirection[]{});
+    }
+
+    public int getActiveGene() {
+        return i;
     }
 
     public MoveDirection nextGene() {
-        return genesIterator.next();
+        MoveDirection next = genes.get(i);
+        i = (i + 1) % genes.size();
+        return next;
     }
 }
