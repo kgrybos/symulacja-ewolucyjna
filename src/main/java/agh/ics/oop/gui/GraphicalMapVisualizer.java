@@ -4,6 +4,7 @@ import agh.ics.oop.*;
 import agh.ics.oop.WorldMaps.AbstractMapElement;
 import agh.ics.oop.WorldMaps.AbstractWorldMap;
 import agh.ics.oop.observers.*;
+import com.google.common.primitives.Doubles;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.effect.ColorAdjust;
@@ -73,7 +74,7 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
 
             double brightness = 0;
             if(value instanceof Animal animal) {
-                brightness = (((double) animal.getEnergy())/100);
+                brightness = Doubles.constrainToRange(((double) animal.getEnergy()) / 100, 0, 1);
             }
 
             ColorAdjust colorAdjust = new ColorAdjust();
