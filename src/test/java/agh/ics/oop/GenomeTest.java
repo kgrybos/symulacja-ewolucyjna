@@ -34,19 +34,14 @@ public class GenomeTest {
         assertEquals((byte) 4, parent2.nextGene());
         assertEquals((byte) 0, parent2.nextGene());
 
-        Genome child = new Genome(random, parent1, parent2);
+        Genome child = new Genome(random, parent1, parent2, 0.7F, Side.LEFT);
 
-        assertEquals((byte) 4, child.nextGene());
-        assertEquals((byte) 0, child.nextGene());
+        assertEquals((byte) 6, child.nextGene());
         assertEquals((byte) 4, child.nextGene());
         assertEquals((byte) 5, child.nextGene());
         assertEquals((byte) 6, child.nextGene());
-        assertEquals((byte) 1, child.nextGene());
-        assertEquals((byte) 4, child.nextGene());
-        assertEquals((byte) 0, child.nextGene());
         assertEquals((byte) 4, child.nextGene());
         assertEquals((byte) 5, child.nextGene());
         assertEquals((byte) 6, child.nextGene());
-        assertEquals((byte) 1, child.nextGene());
     }
 }

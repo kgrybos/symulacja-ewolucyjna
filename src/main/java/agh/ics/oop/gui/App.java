@@ -30,11 +30,11 @@ public class App extends Application {
         worldMap = new Globe(50, 50);
         graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
 
-        Random random = new Random();
+        Random random = new Random(0);
 
         List<Animal> animals = new ArrayList<>();
         for (Vector2d position : positions) {
-            Animal newAnimal = new Animal(random, worldMap, position);
+            Animal newAnimal = new Animal(random, 8, worldMap, position);
             worldMap.place(newAnimal);
             newAnimal.addObserver(graphicalMapVisualizer);
             animals.add(newAnimal);
@@ -42,6 +42,13 @@ public class App extends Application {
 
         EquatorGrassGenerator equatorGrassGenerator = new EquatorGrassGenerator(random, worldMap.width, worldMap.height);
         equatorGrassGenerator.generate(worldMap, 300);
+
+        for(int i = 0; i < 100; i++) {
+            int size = random.nextInt(20)+1;
+            Genome g1 = new Genome(random, size);
+            Genome g2 = new Genome(random, size);
+            new Genome(random, g1, g2, random.nextFloat(), Side.random(random));
+        }
 
         engine = new SimulationEngine(animals, 300);
     }

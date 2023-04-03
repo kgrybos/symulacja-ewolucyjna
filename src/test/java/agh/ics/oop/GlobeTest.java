@@ -12,7 +12,7 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal = new Animal(random, map, new Vector2d(1, 2));
+        Animal animal = new Animal(random, 8, map, new Vector2d(1, 2));
         map.place(animal);
 
         assertTrue(map.isOccupied(new Vector2d(1, 2)));
@@ -25,10 +25,10 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal1 = new Animal(random, map, new Vector2d(1, 2));
+        Animal animal1 = new Animal(random, 8, map, new Vector2d(1, 2));
         map.place(animal1);
 
-        Animal animal2 = new Animal(random, map, new Vector2d(1, 3));
+        Animal animal2 = new Animal(random, 8, map, new Vector2d(1, 3));
         map.place(animal2);
 
         assertEquals(animal1, map.objectAt(new Vector2d(1, 2)));
@@ -44,7 +44,7 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal1 = new Animal(random, map, new Vector2d(1, 2));
+        Animal animal1 = new Animal(random, 8, map, new Vector2d(1, 2));
         map.place(animal1);
 
         animal1.move(MoveDirection.LEFT);
@@ -61,7 +61,7 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal1 = new Animal(random, map, new Vector2d(1, 2));
+        Animal animal1 = new Animal(random, 8, map,  new Vector2d(1, 2));
         map.place(animal1);
 
         animal1.move(MoveDirection.FORWARD);
