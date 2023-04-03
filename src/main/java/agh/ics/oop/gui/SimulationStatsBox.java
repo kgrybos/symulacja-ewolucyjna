@@ -46,9 +46,15 @@ public class SimulationStatsBox extends GridPane implements ISimulationStatsObse
             freeNumber.setText(Integer.toString(simulationStats.freeNumber()));
             averageEnergy.setText(String.format("%.2f", simulationStats.averageEnergy()));
             averageLifetime.setText(String.format("%.2f", simulationStats.averageLifetime()));
-            genotype1.setText("1. " + Arrays.toString(simulationStats.mostPopularGenotypes().get(0)));
-            genotype2.setText("2. " + Arrays.toString(simulationStats.mostPopularGenotypes().get(1)));
-            genotype3.setText("3. " + Arrays.toString(simulationStats.mostPopularGenotypes().get(2)));
+            if(simulationStats.mostPopularGenotypes().size() >= 1) {
+                genotype1.setText("1. " + Arrays.toString(simulationStats.mostPopularGenotypes().get(0)));
+            }
+            if(simulationStats.mostPopularGenotypes().size() >= 2) {
+                genotype2.setText("2. " + Arrays.toString(simulationStats.mostPopularGenotypes().get(1)));
+            }
+            if(simulationStats.mostPopularGenotypes().size() >= 3) {
+                genotype3.setText("3. " + Arrays.toString(simulationStats.mostPopularGenotypes().get(2)));
+            }
         });
     }
 }
