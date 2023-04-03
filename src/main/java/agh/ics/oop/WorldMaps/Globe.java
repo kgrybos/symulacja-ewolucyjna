@@ -1,8 +1,6 @@
 package agh.ics.oop.WorldMaps;
 
-import agh.ics.oop.MoveDirection;
-import agh.ics.oop.PosDir;
-import agh.ics.oop.Vector2d;
+import agh.ics.oop.*;
 
 public class Globe extends AbstractWorldMap {
     public Globe(int width, int height) {
@@ -10,19 +8,19 @@ public class Globe extends AbstractWorldMap {
     }
 
     @Override
-    public PosDir getPosDirToMove(AbstractMapElement element, MoveDirection moveDirection) {
-        PosDir newPosDir = element.posDir.move(moveDirection);
+    public PosDir getPosDirToMove(Animal animal, MoveDirection moveDirection) {
+        PosDir newPosDir = animal.posDir.move(moveDirection);
 
         if(boundary.isInside(newPosDir.position())) {
             return newPosDir;
         } else if(boundary.isLeft(newPosDir.position())) {
-            Vector2d newPosition = new Vector2d(boundary.upperRight().x, element.posDir.position().y);
+            Vector2d newPosition = new Vector2d(boundary.upperRight().x, animal.posDir.position().y);
             return newPosDir.changePosition(newPosition);
         } else if(boundary.isRight(newPosDir.position())) {
-            Vector2d newPosition = new Vector2d(boundary.lowerLeft().x, element.posDir.position().y);
+            Vector2d newPosition = new Vector2d(boundary.lowerLeft().x, animal.posDir.position().y);
             return newPosDir.changePosition(newPosition);
         } else {
-            return element.posDir.changeDirectionOpposite();
+            return animal.posDir.changeDirectionOpposite();
         }
     }
 }

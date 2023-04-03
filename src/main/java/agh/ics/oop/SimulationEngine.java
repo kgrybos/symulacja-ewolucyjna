@@ -4,6 +4,7 @@ import agh.ics.oop.GrassGenerators.EquatorGrassGenerator;
 import agh.ics.oop.GrassGenerators.GrassGenerator;
 import agh.ics.oop.WorldMaps.AbstractWorldMap;
 import agh.ics.oop.WorldMaps.Globe;
+import agh.ics.oop.WorldMaps.HellPortal;
 import agh.ics.oop.gui.GraphicalMapVisualizer;
 import agh.ics.oop.observers.BirthEvent;
 import agh.ics.oop.observers.ElementEvent;
@@ -28,14 +29,14 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
         this.dayDelay = dayDelay;
         this.config = config;
 
+        Random random = new Random(0);
+
         worldMap = switch (config.worldMap()) {
             case GLOBE -> new Globe(config.mapWidth(), config.mapHeight());
-            case HELL -> throw new IllegalArgumentException();
+            case HELL -> new HellPortal(random, config.mapWidth(), config.mapHeight());
         };
         graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
         worldMap.addPositionsChangedObserver(graphicalMapVisualizer);
-
-        Random random = new Random(0);
 
         switch(config.grassGenerator()) {
             case EQUATOR -> grassGenerator = new EquatorGrassGenerator(random, worldMap.width, worldMap.height, config);

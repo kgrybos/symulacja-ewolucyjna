@@ -50,7 +50,7 @@ public abstract class AbstractWorldMap implements IElementEventObserver {
         return mapElements.get(position);
     }
 
-    public Optional<AbstractMapElement> objectAt(Vector2d position, Class<? extends  AbstractMapElement> type) {
+    public Optional<AbstractMapElement> objectAt(Vector2d position, Class<? extends AbstractMapElement> type) {
         Collection<AbstractMapElement> elements = objectsAt(position);
         return elements
                 .stream()
@@ -104,7 +104,7 @@ public abstract class AbstractWorldMap implements IElementEventObserver {
         return Optional.empty();
     }
 
-    public abstract PosDir getPosDirToMove(AbstractMapElement element, MoveDirection move);
+    public abstract PosDir getPosDirToMove(Animal animal, MoveDirection move);
 
     public void addPositionsChangedObserver(IPositionsChangedObserver observer) {
         positionsChangedObservers.add(observer);

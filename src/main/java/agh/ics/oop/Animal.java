@@ -48,6 +48,10 @@ public class Animal extends AbstractMapElement {
         return "Zwierze " + posDir.position();
     }
 
+    public void reproductionEnergyDecrease() {
+        energy -= config.energyForNewborn();
+    }
+
     public void wakeUp() {
         energy -= 1;
         if(energy == 0) {
