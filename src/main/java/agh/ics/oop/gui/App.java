@@ -2,7 +2,6 @@ package agh.ics.oop.gui;
 
 import agh.ics.oop.*;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,9 +15,8 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class App extends Application implements IPositionChangeObserver {
+public class App extends Application {
     private Globe worldMap;
-    private Stage primaryStage;
     private GraphicalMapVisualizer graphicalMapVisualizer;
     private SimulationEngine engine;
 
@@ -37,7 +35,7 @@ public class App extends Application implements IPositionChangeObserver {
             for (Vector2d position : positions) {
                 Animal newAnimal = new Animal(worldMap, position);
                 worldMap.place(newAnimal);
-                newAnimal.addObserver(this);
+                newAnimal.addObserver(graphicalMapVisualizer);
                 animals.add(newAnimal);
             }
 
@@ -50,8 +48,7 @@ public class App extends Application implements IPositionChangeObserver {
     public void start(Stage primaryStage) {
         System.out.println(worldMap.toString());
 
-        this.primaryStage = primaryStage;
-        graphicalMapVisualizer.render();
+        graphicalMapVisualizer.full_render();
 
         TextField textField = new TextField("f b r l f f r r f f f f f f f f");
         textField.setPrefWidth(500);
@@ -74,13 +71,5 @@ public class App extends Application implements IPositionChangeObserver {
         Scene scene = new Scene(main);
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    @Override
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition, AbstractMapElement element) {
-        Platform.runLater(() -> {
-            graphicalMapVisualizer.render();
-            primaryStage.sizeToScene();
-        });
     }
 }
