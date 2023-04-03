@@ -27,6 +27,7 @@ public class GraphicalMapVisualizer {
         gridPane.setGridLinesVisible(true);
 
         Label legend = new Label("y/x");
+        GridPane.setHalignment(legend, HPos.CENTER);
         gridPane.add(legend, 0, 0);
         gridPane.getColumnConstraints().add(new ColumnConstraints(COLUMN_SIZE));
         gridPane.getRowConstraints().add(new RowConstraints(ROW_SIZE));
@@ -43,7 +44,7 @@ public class GraphicalMapVisualizer {
         // Rows legend
         for(int i = 0; i < numberOfRows; i++) {
             addCell(Integer.toString(upperRight.y-i), 0, i+1, gridPane);
-            gridPane.getRowConstraints().add(new RowConstraints(COLUMN_SIZE));
+            gridPane.getRowConstraints().add(new RowConstraints(ROW_SIZE));
         }
 
         // Map elements

@@ -3,7 +3,6 @@ package agh.ics.oop;
 import javafx.util.Pair;
 
 import java.util.Comparator;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -11,7 +10,7 @@ public class MapBoundary implements IPositionChangeObserver {
     private final SortedSet<Pair<Vector2d, String>> xMapOrder;
     private final SortedSet<Pair<Vector2d, String>> yMapOrder;
 
-    MapBoundary() {
+    public MapBoundary() {
         Comparator<Pair<Vector2d, String>> compareClass = Comparator.comparing(Pair::getValue);
         Comparator<Pair<Vector2d, String>> compareX = Comparator.comparing(el -> el.getKey().x);
         Comparator<Pair<Vector2d, String>> compareY = Comparator.comparing(el -> el.getKey().y);
@@ -29,6 +28,9 @@ public class MapBoundary implements IPositionChangeObserver {
     }
 
     public void put(IMapElement element) {
+        if(element instanceof Animal animal) {
+            animal.addObserver(this);
+        }
         xMapOrder.add(new Pair<>(element.getPosition(), element.getClass().toString()));
         yMapOrder.add(new Pair<>(element.getPosition(), element.getClass().toString()));
     }
