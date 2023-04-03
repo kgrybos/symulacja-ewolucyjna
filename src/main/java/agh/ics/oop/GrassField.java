@@ -16,7 +16,8 @@ public class GrassField extends AbstractWorldMap {
         for(int i = 0; i < tuftNumber; i++) {
             int x = rand.nextInt((int) sqrt(tuftNumber*10)+1);
             int y = rand.nextInt((int) sqrt(tuftNumber*10)+1);
-            mapElements.add(new Grass(new Vector2d(x,y)));
+            Vector2d position = new Vector2d(x,y);
+            mapElements.put(position, new Grass(position));
         }
     }
 
@@ -32,8 +33,8 @@ public class GrassField extends AbstractWorldMap {
     @Override
     protected Vector2d lowerLeft() {
         return mapElements
+                .keySet()
                 .stream()
-                .map(IMapElement::getPosition)
                 .reduce(Vector2d::lowerLeft)
                 .orElse(new Vector2d(-8, -8))
                 .subtract(new Vector2d(1, 1));
@@ -42,8 +43,8 @@ public class GrassField extends AbstractWorldMap {
     @Override
     protected Vector2d upperRight() {
         return mapElements
+                .keySet()
                 .stream()
-                .map(IMapElement::getPosition)
                 .reduce(Vector2d::upperRight)
                 .orElse(new Vector2d(8, 8))
                 .add(new Vector2d(1, 1));
