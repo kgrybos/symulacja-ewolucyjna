@@ -79,19 +79,21 @@ public class GraphicalMapVisualizer implements IAnimalEventObserver {
 
     @Override
     public void animalEvent(AnimalEvent animalEvent) {
-        Platform.runLater(() -> {
-            if(animalEvent instanceof BirthEvent event) {
-                updateImage(event.position);
-            } else if(animalEvent instanceof PositionChangedEvent event) {
+        if(animalEvent instanceof BirthEvent event) {
+            Platform.runLater(() -> updateImage(event.position));
+        } else if(animalEvent instanceof PositionChangedEvent event) {
+            Platform.runLater(() -> {
                 cells[event.oldPosition.x][event.oldPosition.y].setImage(null);
                 cells[event.newPosition.x][event.newPosition.y].setImage(null);
 
                 updateImage(event.oldPosition);
                 updateImage(event.newPosition);
-            } else if(animalEvent instanceof DeathEvent event) {
+            });
+        } else if(animalEvent instanceof DeathEvent event) {
+            Platform.runLater(() -> {
                 cells[event.position.x][event.position.y].setImage(null);
                 updateImage(event.position);
-            }
-        });
+            });
+        }
     }
 }
