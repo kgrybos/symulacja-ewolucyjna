@@ -9,12 +9,12 @@ public class Animal extends AbstractMapElement {
 
     private final List<IPositionChangeObserver> positionChangeObservers = new ArrayList<>();
 
-    Animal(IWorldMap map) {
+    public Animal(IWorldMap map) {
         worldMap = map;
         position = new Vector2d(2, 2);
     }
 
-    Animal(IWorldMap map, Vector2d initialPosition) {
+    public Animal(IWorldMap map, Vector2d initialPosition) {
         worldMap = map;
         position = initialPosition;
     }

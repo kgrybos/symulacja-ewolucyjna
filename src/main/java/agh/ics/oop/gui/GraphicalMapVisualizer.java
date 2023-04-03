@@ -20,6 +20,7 @@ public class GraphicalMapVisualizer {
     }
 
     public GridPane render(Vector2d lowerLeft, Vector2d upperRight) {
+        gridPane.setGridLinesVisible(false);
         gridPane.getChildren().clear();
         gridPane.setGridLinesVisible(true);
 

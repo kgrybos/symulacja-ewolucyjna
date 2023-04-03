@@ -1,23 +1,19 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class SimulationEngine implements IEngine{
+import static java.lang.Thread.sleep;
+
+public class SimulationEngine implements IEngine, Runnable {
     private final MoveDirection[] moves;
-    private final IWorldMap map;
-    private final List<Animal> animals = new ArrayList<>();
+    private final List<Animal> animals;
+    private final int moveDelay;
 
-    public SimulationEngine(MoveDirection[] moves, IWorldMap map, Vector2d[] initialAnimalPositions) {
+    public SimulationEngine(MoveDirection[] moves, List<Animal> animals, int moveDelay) {
         this.moves = moves;
-        this.map = map;
-
-        for(Vector2d initialPosition : initialAnimalPositions) {
-            Animal newAnimal = new Animal(map, initialPosition);
-            map.place(newAnimal);
-            animals.add(newAnimal);
-        }
+        this.animals = animals;
+        this.moveDelay = moveDelay;
     }
 
     @Override
@@ -25,6 +21,12 @@ public class SimulationEngine implements IEngine{
         Iterator<Animal> animalIterator = animals.iterator();
 
         for(MoveDirection move : moves) {
+            try {
+                sleep(moveDelay);
+            } catch(InterruptedException exception) {
+                System.out.println("Simulation stopped.");
+            }
+
             Animal currentAnimal = animalIterator.next();
             currentAnimal.move(move);
 
