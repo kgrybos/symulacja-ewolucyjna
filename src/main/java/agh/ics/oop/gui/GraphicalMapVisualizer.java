@@ -1,6 +1,8 @@
 package agh.ics.oop.gui;
 
 import agh.ics.oop.*;
+import agh.ics.oop.WorldMaps.AbstractMapElement;
+import agh.ics.oop.WorldMaps.AbstractWorldMap;
 import agh.ics.oop.observers.*;
 import javafx.application.Platform;
 import javafx.geometry.HPos;

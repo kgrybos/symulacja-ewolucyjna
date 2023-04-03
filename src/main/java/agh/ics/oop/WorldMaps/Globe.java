@@ -1,4 +1,8 @@
-package agh.ics.oop;
+package agh.ics.oop.WorldMaps;
+
+import agh.ics.oop.MoveDirection;
+import agh.ics.oop.PosDir;
+import agh.ics.oop.Vector2d;
 
 public class Globe extends AbstractWorldMap {
     public Globe(int width, int height) {

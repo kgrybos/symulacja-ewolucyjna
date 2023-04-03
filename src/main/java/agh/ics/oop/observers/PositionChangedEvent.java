@@ -1,6 +1,6 @@
 package agh.ics.oop.observers;
 
-import agh.ics.oop.AbstractMapElement;
+import agh.ics.oop.WorldMaps.AbstractMapElement;
 import agh.ics.oop.Vector2d;
 
 public class PositionChangedEvent extends ElementEvent {

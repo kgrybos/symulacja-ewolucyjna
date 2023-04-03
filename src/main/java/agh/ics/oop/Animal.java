@@ -1,5 +1,7 @@
 package agh.ics.oop;
 
+import agh.ics.oop.WorldMaps.AbstractMapElement;
+import agh.ics.oop.WorldMaps.AbstractWorldMap;
 import agh.ics.oop.observers.*;
 
 import java.util.*;

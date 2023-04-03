@@ -1,4 +1,8 @@
-package agh.ics.oop;
+package agh.ics.oop.WorldMaps;
+
+import agh.ics.oop.MapDirection;
+import agh.ics.oop.PosDir;
+import agh.ics.oop.Vector2d;
 
 public abstract class AbstractMapElement {
     protected PosDir posDir;

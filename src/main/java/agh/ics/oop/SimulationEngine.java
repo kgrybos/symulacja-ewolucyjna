@@ -2,6 +2,8 @@ package agh.ics.oop;
 
 import agh.ics.oop.GrassGenerators.EquatorGrassGenerator;
 import agh.ics.oop.GrassGenerators.GrassGenerator;
+import agh.ics.oop.WorldMaps.AbstractWorldMap;
+import agh.ics.oop.WorldMaps.Globe;
 import agh.ics.oop.gui.GraphicalMapVisualizer;
 import agh.ics.oop.observers.BirthEvent;
 import agh.ics.oop.observers.ElementEvent;
@@ -26,7 +28,10 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
         this.dayDelay = dayDelay;
         this.config = config;
 
-        worldMap = new Globe(config.mapWidth(), config.mapHeight());
+        worldMap = switch (config.worldMap()) {
+            case GLOBE -> new Globe(config.mapWidth(), config.mapHeight());
+            case HELL -> throw new IllegalArgumentException();
+        };
         graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
         worldMap.addPositionsChangedObserver(graphicalMapVisualizer);
 
@@ -104,17 +109,13 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
     public synchronized void run() {
         try {
             wait();
-            int dayNumber = 0;
             while(true) {
-                System.out.println("Dzień: " + dayNumber);
                 simulateDay();
                 if (paused) {
                     wait();
                 } else {
                     sleep(dayDelay);
                 }
-
-                dayNumber += 1;
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

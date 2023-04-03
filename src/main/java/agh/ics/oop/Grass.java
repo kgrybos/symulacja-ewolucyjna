@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+import agh.ics.oop.WorldMaps.AbstractMapElement;
 import agh.ics.oop.observers.BirthEvent;
 import agh.ics.oop.observers.DeathEvent;
 import agh.ics.oop.observers.ElementEvent;

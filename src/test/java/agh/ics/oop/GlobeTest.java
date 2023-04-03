@@ -1,5 +1,7 @@
 package agh.ics.oop;
 
+import agh.ics.oop.WorldMaps.AbstractMapElement;
+import agh.ics.oop.WorldMaps.Globe;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;

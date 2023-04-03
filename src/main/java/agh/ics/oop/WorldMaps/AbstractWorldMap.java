@@ -1,5 +1,6 @@
-package agh.ics.oop;
+package agh.ics.oop.WorldMaps;
 
+import agh.ics.oop.*;
 import agh.ics.oop.observers.*;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;

@@ -1,6 +1,7 @@
 package agh.ics.oop.GrassGenerators;
 
 import agh.ics.oop.*;
+import agh.ics.oop.WorldMaps.AbstractWorldMap;
 
 import java.util.Random;
 
