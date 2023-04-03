@@ -7,9 +7,14 @@ import agh.ics.oop.WorldMaps.WorldMapType;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
-public record Config(
+public record Config (
+        String name,
         int mapWidth,
         int mapHeight,
         WorldMapType worldMap,
@@ -28,15 +33,24 @@ public record Config(
         AnimalBehaviourType animalBehaviour
 ) {
     public static Config getFromFile(String configName) {
+        try {
+            return getFromFile(Paths.get(World.class.getResource("configs/" + configName + ".properties").toURI()));
+        } catch (URISyntaxException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    public static Config getFromFile(Path path) {
         Properties props;
         try {
-            InputStream propsInput = World.class.getResourceAsStream(configName + ".properties");
+            InputStream propsInput = Files.newInputStream(path);
             props = new Properties();
             props.load(propsInput);
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
 
+        String name = props.getProperty("NAME");
         int mapWidth = Integer.parseInt(props.getProperty("MAP_WIDTH"));
         int mapHeight = Integer.parseInt(props.getProperty("MAP_HEIGHT"));
         WorldMapType worldMap = WorldMapType.idToWorldMapType(props.getProperty("WORLD_MAP"));
@@ -55,6 +69,7 @@ public record Config(
         AnimalBehaviourType animalBehaviour = AnimalBehaviourType.idToAnimalBehaviour(props.getProperty("ANIMAL_BEHAVIOUR"));
 
         return new Config(
+                name,
                 mapWidth,
                 mapHeight,
                 worldMap,

@@ -4,6 +4,7 @@ import agh.ics.oop.AnimalBehaviours.AnimalBehaviourType;
 import agh.ics.oop.Config;
 import agh.ics.oop.GrassGenerators.GrassGeneratorType;
 import agh.ics.oop.Mutators.MutatorType;
+import agh.ics.oop.World;
 import agh.ics.oop.WorldMaps.WorldMapType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,11 +17,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class ConfigEditor extends VBox {
-    private final ComboBox<String> configChoice = new ComboBox<>();
+    private final ComboBox<ConfigFile> configChoice = new ComboBox<>();
     private final TextField mapWidthField = new TextField();
     private final TextField mapHeightField = new TextField();
     private final ComboBox<WorldMapType> worldMapField = new ComboBox<>();
@@ -37,19 +43,25 @@ public class ConfigEditor extends VBox {
     private final ComboBox<MutatorType> mutatorField = new ComboBox<>();
     private final TextField genomeSizeField = new TextField();
     private final ComboBox<AnimalBehaviourType> animalBehaviourField = new ComboBox<>();
-    private final List<String> configs = Arrays.asList(
-            null,
-            "normal",
-            "no_mutations"
-    );
 
     public ConfigEditor() {
+        List<ConfigFile> configs = null;
+        try {
+            URL configsDirectory = World.class.getResource("configs/");
+            configs = Files.walk(Paths.get(configsDirectory.toURI()))
+                    .filter(Files::isRegularFile)
+                    .map(ConfigFile::fromPath)
+                    .toList();
+        } catch (IOException | URISyntaxException exception) {
+            exception.printStackTrace();
+        }
+
         configChoice.getItems().setAll(configs);
         configChoice.setPrefWidth(300);
 
         configChoice.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if(newValue != null ) {
-                updateTextFields(Config.getFromFile(newValue));
+                updateTextFields(newValue.config);
             } else {
                 emptyTextFields();
             }
@@ -171,6 +183,7 @@ public class ConfigEditor extends VBox {
 
     private Config createConfig() {
         return new Config(
+            "własny",
             Integer.parseInt(mapWidthField.getText()),
             Integer.parseInt(mapHeightField.getText()),
             worldMapField.getValue(),
@@ -188,5 +201,20 @@ public class ConfigEditor extends VBox {
             Integer.parseInt(genomeSizeField.getText()),
             animalBehaviourField.getValue()
         );
+    }
+
+    private record ConfigFile(
+            String name,
+            Config config
+    ) {
+        public static ConfigFile fromPath(Path path) {
+            Config config = Config.getFromFile(path);
+            return new ConfigFile(config.name(), config);
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }
