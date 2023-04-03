@@ -41,11 +41,11 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
             cellSize = GRID_SIZE/map.height;
         }
 
-        for(int i = 0; i < map.width+1; i++) {
+        for(int i = 0; i < map.width; i++) {
             gridPane.getColumnConstraints().add(new ColumnConstraints(cellSize));
         }
 
-        for(int i = 0; i < map.width+1; i++) {
+        for(int i = 0; i < map.width; i++) {
             gridPane.getRowConstraints().add(new RowConstraints(cellSize));
         }
 
