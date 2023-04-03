@@ -1,12 +1,14 @@
 package agh.ics.oop;
 
+import agh.ics.oop.observers.*;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import java.util.Collection;
+import java.util.*;
 
-public abstract class AbstractWorldMap implements IAnimalEventObserver {
+public abstract class AbstractWorldMap implements IElementEventObserver {
     protected final Multimap<Vector2d, AbstractMapElement> mapElements = ArrayListMultimap.create();
+    protected final List<IPositionsChangedObserver> positionsChangedObservers = new ArrayList<>();
     public final int width;
     public final int height;
     public final Boundary boundary;
@@ -21,23 +23,17 @@ public abstract class AbstractWorldMap implements IAnimalEventObserver {
     }
 
     @Override
-    public void animalEvent(AnimalEvent animalEvent) {
-        if(animalEvent instanceof BirthEvent event) {
-            mapElements.put(event.position, event.animal);
-        } else if(animalEvent instanceof PositionChangedEvent event) {
-            mapElements.remove(event.oldPosition, event.animal);
-            mapElements.put(event.newPosition, event.animal);
-        } else if (animalEvent instanceof DeathEvent event) {
-            mapElements.remove(event.position, event.animal);
-        }
-    }
-
-    public void place(Grass grass) {
-        Vector2d position = grass.getPosition();
-        if(boundary.isInside(position)) {
-            mapElements.put(position, grass);
-        } else {
-            throw new IllegalArgumentException("Elements can't be placed on position: " + position);
+    public void handleElementEvent(ElementEvent elementEvent) {
+        if(elementEvent instanceof BirthEvent event) {
+            mapElements.put(event.position, event.element);
+            notifyPositionsChangedObservers(Collections.singletonList(event.position));
+        } else if(elementEvent instanceof PositionChangedEvent event) {
+            mapElements.remove(event.oldPosition, event.element);
+            mapElements.put(event.newPosition, event.element);
+            notifyPositionsChangedObservers(Arrays.asList(event.oldPosition, event.newPosition));
+        } else if (elementEvent instanceof DeathEvent event) {
+            mapElements.remove(event.position, event.element);
+            notifyPositionsChangedObservers(Collections.singletonList(event.position));
         }
     }
 
@@ -49,18 +45,27 @@ public abstract class AbstractWorldMap implements IAnimalEventObserver {
         return mapElements.get(position);
     }
 
-    public AbstractMapElement objectAt(Vector2d position) {
+    public Optional<AbstractMapElement> objectAt(Vector2d position, Class<? extends  AbstractMapElement> type) {
         Collection<AbstractMapElement> elements = objectsAt(position);
         return elements
                 .stream()
-                .filter(el -> el instanceof Animal)
-                .findFirst()
-                .orElseGet(() -> elements
-                        .stream()
-                        .findFirst()
-                        .orElse(null)
-                );
+                .filter(type::isInstance)
+                .findFirst();
     }
 
     public abstract PosDir getPosDirToMove(AbstractMapElement element, MoveDirection move);
+
+    public void addPositionsChangedObserver(IPositionsChangedObserver observer) {
+        positionsChangedObservers.add(observer);
+    }
+
+    public void removePositionsChangedObserver(IPositionsChangedObserver observer) {
+        positionsChangedObservers.remove(observer);
+    }
+
+    public void notifyPositionsChangedObservers(List<Vector2d> position) {
+        for(IPositionsChangedObserver observer : positionsChangedObservers) {
+            observer.positionsChanged(position);
+        }
+    }
 }

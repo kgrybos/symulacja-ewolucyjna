@@ -1,6 +1,7 @@
 package agh.ics.oop.gui;
 
 import agh.ics.oop.*;
+import agh.ics.oop.observers.IAnimalStatsObserver;
 import javafx.application.Platform;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;

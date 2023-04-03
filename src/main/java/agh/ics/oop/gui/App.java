@@ -24,6 +24,7 @@ public class App extends Application {
 
         worldMap = new Globe(50, 50);
         graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
+        worldMap.addPositionsChangedObserver(graphicalMapVisualizer);
 
         Random random = new Random(0);
 
@@ -33,7 +34,6 @@ public class App extends Application {
                     .setRandom(random)
                     .addAnimalEventObserver(worldMap)
                     .addAnimalEventObserver(engine)
-                    .addAnimalEventObserver(graphicalMapVisualizer)
                     .setPosDir(new PosDir(position))
                     .buildNew(8);
         }

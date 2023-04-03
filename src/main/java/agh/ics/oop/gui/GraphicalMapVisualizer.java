@@ -1,6 +1,7 @@
 package agh.ics.oop.gui;
 
 import agh.ics.oop.*;
+import agh.ics.oop.observers.*;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.image.Image;
@@ -9,9 +10,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-public class GraphicalMapVisualizer implements IAnimalEventObserver {
+public class GraphicalMapVisualizer implements IPositionsChangedObserver {
     private final AbstractWorldMap map;
     public final GridPane gridPane;
     private final ImageView[][] cells;
@@ -57,12 +60,15 @@ public class GraphicalMapVisualizer implements IAnimalEventObserver {
     }
 
     private void updateImage(Vector2d position) {
-        AbstractMapElement element = map.objectAt(position);
-        if(element != null) {
-            InputStream stream = Objects.requireNonNull(getClass().getResourceAsStream(element.getImageFilename()));
+        Optional<AbstractMapElement> element = map
+                .objectAt(position, Animal.class)
+                .or(() -> map.objectAt(position, Grass.class));
+
+        element.ifPresent(value -> {
+            InputStream stream = Objects.requireNonNull(getClass().getResourceAsStream(value.getImageFilename()));
             Image image = new Image(stream);
             cells[position.x][position.y].setImage(image);
-        }
+        });
     }
 
     public void full_render() {
@@ -78,22 +84,12 @@ public class GraphicalMapVisualizer implements IAnimalEventObserver {
     }
 
     @Override
-    public void animalEvent(AnimalEvent animalEvent) {
-        if(animalEvent instanceof BirthEvent event) {
-            Platform.runLater(() -> updateImage(event.position));
-        } else if(animalEvent instanceof PositionChangedEvent event) {
-            Platform.runLater(() -> {
-                cells[event.oldPosition.x][event.oldPosition.y].setImage(null);
-                cells[event.newPosition.x][event.newPosition.y].setImage(null);
-
-                updateImage(event.oldPosition);
-                updateImage(event.newPosition);
-            });
-        } else if(animalEvent instanceof DeathEvent event) {
-            Platform.runLater(() -> {
-                cells[event.position.x][event.position.y].setImage(null);
-                updateImage(event.position);
-            });
-        }
+    public void positionsChanged(List<Vector2d> positions) {
+        Platform.runLater(() -> {
+            for (Vector2d position : positions) {
+                cells[position.x][position.y].setImage(null);
+                updateImage(position);
+            }
+        });
     }
 }

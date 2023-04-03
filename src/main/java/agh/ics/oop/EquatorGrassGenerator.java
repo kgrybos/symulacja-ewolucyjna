@@ -31,16 +31,20 @@ public class EquatorGrassGenerator implements GrassGenerator {
     @Override
     public void generate(AbstractWorldMap map, int number) {
         for(int i = 0; i < number; i++) {
+            Vector2d position;
             double regionChoice = random.nextDouble();
             if(regionChoice < 0.1) {
-                Grass grass = new Grass(northBoundary.randomInside(random));
-                map.place(grass);
+                position = northBoundary.randomInside(random);
             } else if (regionChoice < 0.9) {
-                Grass grass = new Grass(equatorBoundary.randomInside(random));
-                map.place(grass);
+                position = equatorBoundary.randomInside(random);
             } else {
-                Grass grass = new Grass(southBoundary.randomInside(random));
-                map.place(grass);
+                position = southBoundary.randomInside(random);
+            }
+
+            if(map.objectAt(position, Grass.class).isEmpty()) {
+                new Grass.Builder(position)
+                        .addGrassEventObserver(map)
+                        .build();
             }
         }
     }

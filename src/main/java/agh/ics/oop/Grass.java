@@ -1,7 +1,20 @@
 package agh.ics.oop;
 
+import agh.ics.oop.observers.BirthEvent;
+import agh.ics.oop.observers.ElementEvent;
+import agh.ics.oop.observers.IElementEventObserver;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Grass extends AbstractMapElement {
-    Grass(Vector2d position) { posDir = new PosDir(position); }
+    private final List<IElementEventObserver> grassEventObservers;
+    private Grass(Builder builder) {
+        this.posDir = builder.posDir;
+        this.grassEventObservers = builder.grassEventObservers;
+
+        notifyObservers(new BirthEvent(posDir.position(), this));
+    }
 
     @Override
     public String toString() {
@@ -11,5 +24,38 @@ public class Grass extends AbstractMapElement {
     @Override
     public String getImageFilename() {
         return "grass.png";
+    }
+
+    public void addObserver(IElementEventObserver observer) {
+        grassEventObservers.add(observer);
+    }
+
+    public void removeObserver(IElementEventObserver observer) {
+        grassEventObservers.remove(observer);
+    }
+
+    private void notifyObservers(ElementEvent elementEvent) {
+        for(IElementEventObserver observer : grassEventObservers) {
+            observer.handleElementEvent(elementEvent);
+        }
+    }
+
+    public static class Builder {
+        private PosDir posDir;
+
+        private final List<IElementEventObserver> grassEventObservers = new ArrayList<>();
+
+        public Builder(Vector2d position) {
+            this.posDir = new PosDir(position);
+        }
+
+        public Builder addGrassEventObserver(IElementEventObserver observer) {
+            grassEventObservers.add(observer);
+            return this;
+        }
+
+        public Grass build() {
+            return new Grass(this);
+        }
     }
 }

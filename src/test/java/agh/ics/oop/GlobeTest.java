@@ -2,6 +2,7 @@ package agh.ics.oop;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,12 +41,12 @@ public class GlobeTest {
                 .setPosDir(new PosDir(new Vector2d(1, 3)))
                 .buildNew(8);
 
-        assertEquals(animal1, map.objectAt(new Vector2d(1, 2)));
-        assertEquals(animal2, map.objectAt(new Vector2d(1, 3)));
+        assertEquals(animal1, map.objectAt(new Vector2d(1, 2), Animal.class).get());
+        assertEquals(animal2, map.objectAt(new Vector2d(1, 3), Animal.class).get());
 
-        assertNull(map.objectAt(new Vector2d(9, 9)));
+        assertEquals(Optional.empty(), map.objectAt(new Vector2d(9, 9), AbstractMapElement.class));
 
-        assertNotEquals(animal1, map.objectAt(new Vector2d(1, 3)));
+        assertNotEquals(animal1, map.objectAt(new Vector2d(1, 3), AbstractMapElement.class).get());
     }
 
     @Test

@@ -1,9 +1,11 @@
 package agh.ics.oop;
 
+import agh.ics.oop.observers.*;
+
 import java.util.*;
 
 public class Animal extends AbstractMapElement {
-    private final List<IAnimalEventObserver> animalEventObservers;
+    private final List<IElementEventObserver> animalEventObservers;
     private final List<IAnimalStatsObserver> animalStatsObservers;
     private final AbstractWorldMap worldMap;
     private final Random random;
@@ -60,6 +62,10 @@ public class Animal extends AbstractMapElement {
         notifyEventObservers(new PositionChangedEvent(oldPosition, posDir.position(), this));
     }
 
+    public void eat() {
+
+    }
+
     public Animal reproduce(Animal weaker) {
         this.numberOfChildren += 1;
         weaker.numberOfChildren += 1;
@@ -75,11 +81,11 @@ public class Animal extends AbstractMapElement {
                 .buildBorn(childGenome);
     }
 
-    public void addEventObserver(IAnimalEventObserver observer) {
+    public void addEventObserver(IElementEventObserver observer) {
         animalEventObservers.add(observer);
     }
 
-    public void removeEventObserver(IAnimalEventObserver observer) {
+    public void removeEventObserver(IElementEventObserver observer) {
         animalEventObservers.remove(observer);
     }
     public void addStatsObserver(IAnimalStatsObserver observer) {
@@ -90,9 +96,9 @@ public class Animal extends AbstractMapElement {
         animalStatsObservers.remove(observer);
     }
 
-    private void notifyEventObservers(AnimalEvent animalEvent) {
-        for(IAnimalEventObserver observer : animalEventObservers) {
-            observer.animalEvent(animalEvent);
+    private void notifyEventObservers(ElementEvent elementEvent) {
+        for(IElementEventObserver observer : animalEventObservers) {
+            observer.handleElementEvent(elementEvent);
         }
     }
 
@@ -127,7 +133,7 @@ public class Animal extends AbstractMapElement {
         private PosDir posDir;
         private Integer energy;
         private Integer birthday;
-        private final List<IAnimalEventObserver> animalEventObservers = new ArrayList<>();
+        private final List<IElementEventObserver> animalEventObservers = new ArrayList<>();
         private final List<IAnimalStatsObserver> animalStatsObservers = new ArrayList<>();
 
         public Builder(AbstractWorldMap worldMap) {
@@ -139,11 +145,11 @@ public class Animal extends AbstractMapElement {
             return this;
         }
 
-        public Builder addAnimalEventObserver(IAnimalEventObserver observer) {
+        public Builder addAnimalEventObserver(IElementEventObserver observer) {
             this.animalEventObservers.add(observer);
             return this;
         }
-        public Builder addAnimalEventObserverAll(List<IAnimalEventObserver> observers) {
+        public Builder addAnimalEventObserverAll(List<IElementEventObserver> observers) {
             this.animalEventObservers.addAll(observers);
             return this;
         }

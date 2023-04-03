@@ -1,11 +1,15 @@
 package agh.ics.oop;
 
+import agh.ics.oop.observers.BirthEvent;
+import agh.ics.oop.observers.ElementEvent;
+import agh.ics.oop.observers.IElementEventObserver;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
 
-public class SimulationEngine implements Runnable, IAnimalEventObserver {
+public class SimulationEngine implements Runnable, IElementEventObserver {
     private final List<Animal> animals = new ArrayList<>();
     private final int dayDelay;
     private boolean paused = true;
@@ -23,12 +27,18 @@ public class SimulationEngine implements Runnable, IAnimalEventObserver {
         for(Animal animal : animals) {
             animal.move();
         }
+
+        for(Animal animal : animals) {
+            animal.eat();
+        }
     }
 
     @Override
-    public void animalEvent(AnimalEvent animalEvent) {
-        if(animalEvent instanceof BirthEvent event) {
-            animals.add(event.animal);
+    public void handleElementEvent(ElementEvent elementEvent) {
+        if(elementEvent instanceof BirthEvent event) {
+            if(event.element instanceof Animal animal) {
+                animals.add(animal);
+            }
         }
     }
 
