@@ -7,12 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AnimalTest {
     @Test
     void toStringTest() {
-        assertEquals("Pozycja: (2, 2), orientacja: Północ", new Animal().toString());
+        RectangularMap map = new RectangularMap(5, 5);
+        assertEquals("🡡", new Animal(map).toString());
     }
 
     @Test
     void isAtTest() {
-        Animal animal = new Animal();
+        RectangularMap map = new RectangularMap(5, 5);
+
+        Animal animal = new Animal(map);
         animal.move(MoveDirection.RIGHT);
         animal.move(MoveDirection.FORWARD);
 
@@ -23,34 +26,40 @@ public class AnimalTest {
 
     @Test
     void moveTest() {
-        Animal animal = new Animal();
+        RectangularMap map = new RectangularMap(5, 5);
+
+        Animal animal = new Animal(map);
         animal.move(MoveDirection.RIGHT);
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.FORWARD);
-        assertEquals("Pozycja: (4, 2), orientacja: Wschód", animal.toString());
+        assertEquals(new Vector2d(4, 2), animal.getPosition());
+        assertEquals(MapDirection.EAST, animal.getOrientation());
 
-        animal = new Animal();
+        animal = new Animal(map);
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.LEFT);
         animal.move(MoveDirection.FORWARD);
-        assertEquals("Pozycja: (1, 3), orientacja: Zachód", animal.toString());
+        assertEquals(new Vector2d(1, 3), animal.getPosition());
+        assertEquals(MapDirection.WEST, animal.getOrientation());
 
-        animal = new Animal();
+        animal = new Animal(map);
         animal.move(MoveDirection.LEFT);
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.RIGHT);
         animal.move(MoveDirection.FORWARD);
-        assertEquals("Pozycja: (1, 3), orientacja: Północ", animal.toString());
+        assertEquals(new Vector2d(1, 3), animal.getPosition());
+        assertEquals(MapDirection.NORTH, animal.getOrientation());
 
-        animal = new Animal();
+        animal = new Animal(map);
         animal.move(MoveDirection.BACKWARD);
         animal.move(MoveDirection.RIGHT);
         animal.move(MoveDirection.BACKWARD);
-        assertEquals("Pozycja: (1, 1), orientacja: Wschód", animal.toString());
+        assertEquals(new Vector2d(1, 1), animal.getPosition());
+        assertEquals(MapDirection.EAST, animal.getOrientation());
 
-        animal = new Animal();
+        animal = new Animal(map);
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.FORWARD);
@@ -78,6 +87,7 @@ public class AnimalTest {
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.FORWARD);
-        assertEquals("Pozycja: (0, 0), orientacja: Południe", animal.toString());
+        assertEquals(new Vector2d(0, 0), animal.getPosition());
+        assertEquals(MapDirection.SOUTH, animal.getOrientation());
     }
 }
