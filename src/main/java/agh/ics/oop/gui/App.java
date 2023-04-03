@@ -53,7 +53,7 @@ public class App extends Application implements IPositionChangeObserver {
         this.primaryStage = primaryStage;
         graphicalMapVisualizer.render();
 
-        TextField textField = new TextField();
+        TextField textField = new TextField("f b r l f f r r f f f f f f f f");
         textField.setPrefWidth(500);
 
         Button button = new Button("Start");
