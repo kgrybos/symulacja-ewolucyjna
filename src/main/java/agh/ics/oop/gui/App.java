@@ -56,7 +56,7 @@ public class App extends Application implements IPositionChangeObserver {
         Platform.runLater(() -> {
             GridPane grid = worldMap.render();
             scene.setRoot(grid);
-            primaryStage.show();
+            primaryStage.sizeToScene();
         });
     }
 }
