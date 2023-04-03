@@ -31,6 +31,11 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
         for(Animal animal : animals) {
             animal.eat();
         }
+
+        List<Animal> animalsCopy = new ArrayList<>(animals);
+        for(Animal animal : animalsCopy) {
+            animal.reproduce();
+        }
     }
 
     @Override

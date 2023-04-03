@@ -20,21 +20,18 @@ public class App extends Application {
     public void init() throws Exception {
         super.init();
 
-        Vector2d[] positions = {new Vector2d(3, 4), new Vector2d(25, 25), new Vector2d(43, 12)};
-
         worldMap = new Globe(50, 50);
         graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
         worldMap.addPositionsChangedObserver(graphicalMapVisualizer);
 
         Random random = new Random(0);
 
-        engine = new SimulationEngine(300);
-        for (Vector2d position : positions) {
+        engine = new SimulationEngine(100);
+        for (int i = 0; i < 50; i++) {
             new Animal.Builder(worldMap)
                     .setRandom(random)
                     .addAnimalEventObserver(worldMap)
                     .addAnimalEventObserver(engine)
-                    .setPosDir(new PosDir(position))
                     .buildNew(8);
         }
 

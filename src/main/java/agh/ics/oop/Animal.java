@@ -74,19 +74,29 @@ public class Animal extends AbstractMapElement {
         grassEaten += amount;
     }
 
-    public Animal reproduce(Animal weaker) {
-        this.numberOfChildren += 1;
-        weaker.numberOfChildren += 1;
+    public void reproduce() {
+        Optional<Animal> partner = worldMap.getPartner(this);
+        if(partner.isPresent()) {
+            Animal weaker = partner.get();
+            if(this.energy > 5 && weaker.energy > 5){
+                this.numberOfChildren += 1;
+                weaker.numberOfChildren += 1;
 
-        float ratio = ((float) energy)/(energy + weaker.energy);
-        Side side = Side.random(random);
-        Genome childGenome = new Genome(random, this.genome, weaker.genome, ratio, side);
-        return new Builder(worldMap)
-                .setRandom(random)
-                .addAnimalEventObserverAll(animalEventObservers)
-                .setPosDir(posDir)
-                .setBirthday(birthday+daysAlive)
-                .buildBorn(childGenome);
+                this.energy -= 5;
+                weaker.energy -= 5;
+
+                float ratio = ((float) energy) / (energy + weaker.energy);
+                Side side = Side.random(random);
+                Genome childGenome = new Genome(random, this.genome, weaker.genome, ratio, side);
+                new Builder(worldMap)
+                        .setRandom(random)
+                        .addAnimalEventObserverAll(animalEventObservers)
+                        .setEnergy(10)
+                        .setPosDir(posDir)
+                        .setBirthday(birthday + daysAlive)
+                        .buildBorn(childGenome);
+            }
+        }
     }
 
     public void addEventObserver(IElementEventObserver observer) {
