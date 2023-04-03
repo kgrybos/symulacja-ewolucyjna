@@ -25,7 +25,7 @@ public class Animal extends AbstractMapElement {
 
     @Override
     public String toString() {
-        return orientation.toString();
+        return "Z " + position;
     }
 
     public void move(MoveDirection direction) {
@@ -60,5 +60,10 @@ public class Animal extends AbstractMapElement {
         for(IPositionChangeObserver observer : positionChangeObservers) {
             observer.positionChanged(oldPosition, newPosition);
         }
+    }
+
+    @Override
+    public String getImageFilename() {
+        return orientation.getFilename();
     }
 }

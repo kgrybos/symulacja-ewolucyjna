@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 public interface IMapElement {
-    public Vector2d getPosition();
-    public boolean isAt(Vector2d position);
+    Vector2d getPosition();
+    boolean isAt(Vector2d position);
+    String getImageFilename();
 }

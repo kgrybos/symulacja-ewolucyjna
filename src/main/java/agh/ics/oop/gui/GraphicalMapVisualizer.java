@@ -1,5 +1,6 @@
 package agh.ics.oop.gui;
 
+import agh.ics.oop.IMapElement;
 import agh.ics.oop.IWorldMap;
 import agh.ics.oop.Vector2d;
 import javafx.geometry.HPos;
@@ -10,16 +11,10 @@ import javafx.scene.layout.RowConstraints;
 
 public class GraphicalMapVisualizer {
     private final IWorldMap map;
-    private static final int ROW_SIZE = 25;
-    private static final int COLUMN_SIZE = 25;
+    private static final int ROW_SIZE = 50;
+    private static final int COLUMN_SIZE = 50;
     public GraphicalMapVisualizer(IWorldMap map) {
         this.map = map;
-    }
-
-    private void addCell(String label, int column, int row, GridPane gridPane) {
-        Label coord = new Label(label);
-        GridPane.setHalignment(coord, HPos.CENTER);
-        gridPane.add(coord, column, row);
     }
 
     public GridPane render(Vector2d lowerLeft, Vector2d upperRight) {
@@ -37,13 +32,17 @@ public class GraphicalMapVisualizer {
 
         // Columns legend
         for(int i = 0; i < numberOfColumns; i++) {
-            addCell(Integer.toString(lowerLeft.x+i), i+1, 0, gridPane);
+            Label label = new Label(Integer.toString(lowerLeft.x+i));
+            GridPane.setHalignment(label, HPos.CENTER);
+            gridPane.add(label, i+1, 0);
             gridPane.getColumnConstraints().add(new ColumnConstraints(COLUMN_SIZE));
         }
 
         // Rows legend
         for(int i = 0; i < numberOfRows; i++) {
-            addCell(Integer.toString(upperRight.y-i), 0, i+1, gridPane);
+            Label label = new Label(Integer.toString(upperRight.y-i));
+            GridPane.setHalignment(label, HPos.CENTER);
+            gridPane.add(label, 0, i+1);
             gridPane.getRowConstraints().add(new RowConstraints(ROW_SIZE));
         }
 
@@ -52,9 +51,11 @@ public class GraphicalMapVisualizer {
             for(int row = 0; row < numberOfRows; row++) {
                 Vector2d position = new Vector2d(lowerLeft.x + column, upperRight.y - row );
                 if(map.isOccupied(position)) {
-                    Object object = map.objectAt(position);
-                    if(object != null) {
-                        addCell(object.toString(), column+1, row+1, gridPane);
+                    IMapElement element = (IMapElement) map.objectAt(position);
+                    if(element != null) {
+                        GuiElementBox geb = new GuiElementBox(element.getImageFilename(), element.toString());
+                        GridPane.setHalignment(geb, HPos.CENTER);
+                        gridPane.add(geb, column + 1, row + 1);
                     }
                 }
             }

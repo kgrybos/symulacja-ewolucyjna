@@ -5,6 +5,11 @@ public class Grass extends AbstractMapElement {
 
     @Override
     public String toString() {
-        return "*";
+        return "Trawa";
+    }
+
+    @Override
+    public String getImageFilename() {
+        return "grass.png";
     }
 }
