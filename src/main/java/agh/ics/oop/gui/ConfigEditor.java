@@ -10,12 +10,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,6 +20,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class ConfigEditor extends VBox {
@@ -43,6 +42,21 @@ public class ConfigEditor extends VBox {
     private final ComboBox<MutatorType> mutatorField = new ComboBox<>();
     private final TextField genomeSizeField = new TextField();
     private final ComboBox<AnimalBehaviourType> animalBehaviourField = new ComboBox<>();
+    private final HashMap<TextField, Range> correctValuesRange = new HashMap<>();
+    private final List<TextField> textfields = Arrays.asList(
+            mapWidthField,
+            mapHeightField,
+            initialGrassNumberField,
+            energyFromGrassField,
+            dailyNewGrassField,
+            initialAnimalNumberField,
+            initialAnimalEnergyField,
+            satiatedEnergyField,
+            energyForNewbornField,
+            minMutationsField,
+            maxMutationsField,
+            genomeSizeField
+    );
 
     public ConfigEditor() {
         List<ConfigFile> configs = null;
@@ -62,10 +76,27 @@ public class ConfigEditor extends VBox {
         configChoice.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if(newValue != null ) {
                 updateTextFields(newValue.config);
-            } else {
-                emptyTextFields();
             }
         });
+
+        configChoice.getSelectionModel().select(configs
+                .stream()
+                .filter(el -> el.name.equals("Normalny"))
+                .findFirst()
+                .get());
+
+        correctValuesRange.put(mapWidthField, new Range(0, 150));
+        correctValuesRange.put(mapHeightField, new Range(0, 150));
+        correctValuesRange.put(initialGrassNumberField, new Range( 0, 20000));
+        correctValuesRange.put(energyFromGrassField, new Range( 0, 1000));
+        correctValuesRange.put(dailyNewGrassField, new Range( 0, 20000));
+        correctValuesRange.put(initialAnimalNumberField, new Range( 0, 20000));
+        correctValuesRange.put(initialAnimalEnergyField, new Range( 0, 1000));
+        correctValuesRange.put(satiatedEnergyField, new Range( 0, 1000));
+        correctValuesRange.put(energyForNewbornField, new Range( 0, 1000));
+        correctValuesRange.put(minMutationsField, new Range( 0, Integer.parseInt(genomeSizeField.getText())));
+        correctValuesRange.put(maxMutationsField, new Range( 0, Integer.parseInt(genomeSizeField.getText())));
+        correctValuesRange.put(genomeSizeField, new Range( 0, 1000));
 
         GridPane grid = new GridPane();
         grid.setHgap(20);
@@ -97,21 +128,12 @@ public class ConfigEditor extends VBox {
         ObservableList<AnimalBehaviourType> animalBehaviourTypes = FXCollections.observableArrayList(AnimalBehaviourType.class.getEnumConstants());
         animalBehaviourField.getItems().setAll(animalBehaviourTypes);
 
-        mapWidthField.setPrefWidth(300);
-        mapHeightField.setPrefWidth(300);
+        for(TextField textField : textfields) {
+            textField.setPrefWidth(300);
+        }
         worldMapField.setPrefWidth(300);
-        initialGrassNumberField.setPrefWidth(300);
-        energyFromGrassField.setPrefWidth(300);
-        dailyNewGrassField.setPrefWidth(300);
         grassGeneratorField.setPrefWidth(300);
-        initialAnimalNumberField.setPrefWidth(300);
-        initialAnimalEnergyField.setPrefWidth(300);
-        satiatedEnergyField.setPrefWidth(300);
-        energyForNewbornField.setPrefWidth(300);
-        minMutationsField.setPrefWidth(300);
-        maxMutationsField.setPrefWidth(300);
         mutatorField.setPrefWidth(300);
-        genomeSizeField.setPrefWidth(300);
         animalBehaviourField.setPrefWidth(300);
 
         grid.add(mapWidthField, 1, 0);
@@ -131,9 +153,31 @@ public class ConfigEditor extends VBox {
         grid.add(genomeSizeField, 1, 14);
         grid.add(animalBehaviourField, 1, 15);
 
+        for(TextField textField : textfields) {
+            createErrorListener(textField);
+        }
+
+        genomeSizeField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(correctValue(newValue, genomeSizeField)) {
+                correctValuesRange.put(minMutationsField, new Range(0, Integer.parseInt(newValue)));
+                correctValuesRange.put(maxMutationsField, new Range(0, Integer.parseInt(newValue)));
+            }
+        });
+
         Button startButton = new Button("Uruchom symulację");
         startButton.setPrefWidth(200);
-        startButton.setOnAction(event -> SimulationWindow.start(createConfig()));
+        startButton.setOnAction(event -> {
+            if(textfields.stream().allMatch(textfield -> correctValue(textfield.getText(), textfield))) {
+                SimulationWindow.start(createConfig());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Błąd");
+                alert.setHeaderText(null);
+                alert.setContentText("Parametry nie są poprawne!");
+
+                alert.showAndWait();
+            }
+        });
 
         this.setAlignment(Pos.CENTER);
         this.setSpacing(40);
@@ -162,25 +206,6 @@ public class ConfigEditor extends VBox {
         animalBehaviourField.getSelectionModel().select(config.animalBehaviour());
     }
 
-    private void emptyTextFields() {
-        mapWidthField.setText("");
-        mapHeightField.setText("");
-        worldMapField.getSelectionModel().clearSelection();
-        initialGrassNumberField.setText("");
-        energyFromGrassField.setText("");
-        dailyNewGrassField.setText("");
-        grassGeneratorField.getSelectionModel().clearSelection();
-        initialAnimalNumberField.setText("");
-        initialAnimalEnergyField.setText("");
-        satiatedEnergyField.setText("");
-        energyForNewbornField.setText("");
-        minMutationsField.setText("");
-        maxMutationsField.setText("");
-        mutatorField.getSelectionModel().clearSelection();
-        genomeSizeField.setText("");
-        animalBehaviourField.getSelectionModel().clearSelection();
-    }
-
     private Config createConfig() {
         return new Config(
             "własny",
@@ -203,6 +228,30 @@ public class ConfigEditor extends VBox {
         );
     }
 
+    private boolean correctValue(String value, TextField field) {
+        if(value.equals("")) {
+            return false;
+        }
+
+        if(value.matches("\\d*")) {
+            int numValue = Integer.parseInt(value);
+            int min = correctValuesRange.get(field).low;
+            int max = correctValuesRange.get(field).high;
+            return numValue >= min && numValue <= max;
+        }
+        return false;
+    }
+
+    private void createErrorListener(TextField field) {
+        field.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(correctValue(newValue, field)) {
+                field.setBorder(null);
+            } else {
+                field.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(2), new Insets(-2))));
+            }
+        });
+    }
+
     private record ConfigFile(
             String name,
             Config config
@@ -217,4 +266,6 @@ public class ConfigEditor extends VBox {
             return name;
         }
     }
+
+    private record Range(int low, int high) {}
 }
