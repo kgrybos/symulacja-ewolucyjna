@@ -2,14 +2,17 @@ package agh.ics.oop;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GlobeTest {
     @Test
     void occupationTests() {
         Globe map = new Globe(5, 5);
+        Random random = new Random();
 
-        Animal animal = new Animal(map, new Vector2d(1, 2));
+        Animal animal = new Animal(random, map, new Vector2d(1, 2));
         map.place(animal);
 
         assertTrue(map.isOccupied(new Vector2d(1, 2)));
@@ -20,11 +23,12 @@ public class GlobeTest {
     @Test
     void objectAtTest() {
         Globe map = new Globe(5, 5);
+        Random random = new Random();
 
-        Animal animal1 = new Animal(map, new Vector2d(1, 2));
+        Animal animal1 = new Animal(random, map, new Vector2d(1, 2));
         map.place(animal1);
 
-        Animal animal2 = new Animal(map, new Vector2d(1, 3));
+        Animal animal2 = new Animal(random, map, new Vector2d(1, 3));
         map.place(animal2);
 
         assertEquals(animal1, map.objectAt(new Vector2d(1, 2)));
@@ -38,8 +42,9 @@ public class GlobeTest {
     @Test
     void LeftRightBorderTest() {
         Globe map = new Globe(5, 5);
+        Random random = new Random();
 
-        Animal animal1 = new Animal(map, new Vector2d(1, 2));
+        Animal animal1 = new Animal(random, map, new Vector2d(1, 2));
         map.place(animal1);
 
         animal1.move(MoveDirection.LEFT);
@@ -54,8 +59,9 @@ public class GlobeTest {
     @Test
     void UpDownBorderTest() {
         Globe map = new Globe(5, 5);
+        Random random = new Random();
 
-        Animal animal1 = new Animal(map, new Vector2d(1, 2));
+        Animal animal1 = new Animal(random, map, new Vector2d(1, 2));
         map.place(animal1);
 
         animal1.move(MoveDirection.FORWARD);

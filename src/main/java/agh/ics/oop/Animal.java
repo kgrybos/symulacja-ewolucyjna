@@ -2,12 +2,14 @@ package agh.ics.oop;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Animal extends AbstractMapElement {
     private final List<IPositionChangeObserver> positionChangeObservers = new ArrayList<>();
     private final AbstractWorldMap worldMap;
+    private Genome genome;
 
-    public Animal(AbstractWorldMap worldMap, Vector2d initialPosition) {
+    public Animal(Random random, AbstractWorldMap worldMap, Vector2d initialPosition) {
         this.worldMap = worldMap;
         this.posDir = new PosDir(initialPosition);
     }

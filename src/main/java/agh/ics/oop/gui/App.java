@@ -30,15 +30,16 @@ public class App extends Application {
         worldMap = new Globe(50, 50);
         graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
 
+        Random random = new Random();
+
         List<Animal> animals = new ArrayList<>();
         for (Vector2d position : positions) {
-            Animal newAnimal = new Animal(worldMap, position);
+            Animal newAnimal = new Animal(random, worldMap, position);
             worldMap.place(newAnimal);
             newAnimal.addObserver(graphicalMapVisualizer);
             animals.add(newAnimal);
         }
 
-        Random random = new Random();
         EquatorGrassGenerator equatorGrassGenerator = new EquatorGrassGenerator(random, worldMap.width, worldMap.height);
         equatorGrassGenerator.generate(worldMap, 300);
 
