@@ -39,6 +39,18 @@ public enum MoveDirection {
         };
     }
 
+    public MoveDirection next() {
+        return values()[(this.ordinal() + 1) % values().length];
+    }
+
+    public MoveDirection previous() {
+        int i = this.ordinal() - 1;
+        if(i < 0) {
+            i = values().length-1;
+        }
+        return values()[i];
+    }
+
     public static MoveDirection random(Random random) {
         return values()[random.nextInt(values().length)];
     }

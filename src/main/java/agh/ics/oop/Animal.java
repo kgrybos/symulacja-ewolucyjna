@@ -25,7 +25,7 @@ public class Animal extends AbstractMapElement {
         this.animalStatsObservers = builder.animalStatsObservers;
         this.posDir = Objects.requireNonNullElseGet(builder.posDir, () -> new PosDir(worldMap.boundary.randomInside(random)));
         this.energy = Objects.requireNonNullElseGet(builder.energy, () -> random.nextInt(10)+15);
-        this.genome = Objects.requireNonNullElseGet(builder.genome, () -> new Genome(random, builder.genomeSize));
+        this.genome = Objects.requireNonNullElseGet(builder.genome, () -> new Genome(random, config, builder.genomeSize));
         this.birthday = Objects.requireNonNullElse(builder.birthday, 0);
 
         notifyEventObservers(new BirthEvent(this.posDir.position(), this));

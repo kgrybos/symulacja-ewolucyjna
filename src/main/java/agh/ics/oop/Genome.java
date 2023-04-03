@@ -1,12 +1,27 @@
 package agh.ics.oop;
 
+import agh.ics.oop.AnimalBehaviours.AnimalBehaviour;
+import agh.ics.oop.AnimalBehaviours.CrazyBehaviour;
+import agh.ics.oop.AnimalBehaviours.PredestinicBehaviour;
+import agh.ics.oop.Mutators.Mutator;
+import agh.ics.oop.Mutators.RandomMutator;
+import agh.ics.oop.Mutators.SlightMutator;
+
 import java.util.*;
 
 public class Genome {
     private final List<MoveDirection> genes = new ArrayList<>();
     private int i;
+    private final AnimalBehaviour animalBehaviour;
+    private final Random random;
 
-    public Genome(Random random, int genomeSize) {
+    public Genome(Random random, Config config, int genomeSize) {
+        this.animalBehaviour = switch (config.animalBehaviour()) {
+            case PREDESTINATION -> new PredestinicBehaviour();
+            case CRAZY -> new CrazyBehaviour();
+        };
+        this.random = random;
+
         for(int i = 0; i < genomeSize; i++) {
             genes.add(MoveDirection.random(random));
         }
@@ -15,6 +30,12 @@ public class Genome {
     }
 
     public Genome(Random random, Genome stronger, Genome weaker, float ratio, Side strongerSide, Config config) {
+        this.animalBehaviour = switch (config.animalBehaviour()) {
+            case PREDESTINATION -> new PredestinicBehaviour();
+            case CRAZY -> new CrazyBehaviour();
+        };
+        this.random = random;
+
         int splitPoint = Math.round(stronger.genes.size()*ratio);
 
         List<MoveDirection> strongerGenes = switch (strongerSide) {
@@ -38,18 +59,23 @@ public class Genome {
             }
         }
 
+        Mutator mutator = switch (config.mutator()) {
+            case RANDOM -> new RandomMutator();
+            case SLIGHT -> new SlightMutator();
+        };
+
         if(config.maxMutations()-config.minMutations() > 0) {
             int mutatedGenes = random.nextInt(config.maxMutations() - config.minMutations()) + config.minMutations();
             List<Integer> mutations = randomUniqueNumbers(random, genes.size(), mutatedGenes);
             for (Integer mutation : mutations) {
-                genes.set(mutation, MoveDirection.random(random));
+                genes.set(mutation, mutator.mutate(random, genes.get(mutation)));
             }
         }
 
         i = random.nextInt(stronger.genes.size());
     }
 
-    private List<Integer> randomUniqueNumbers(Random random, int bound, int number) {
+    private static List<Integer> randomUniqueNumbers(Random random, int bound, int number) {
         ArrayList<Integer> list = new ArrayList<>();
         for(int i = 0; i < bound; i++) {
             list.add(i);
@@ -68,7 +94,7 @@ public class Genome {
 
     public MoveDirection nextGene() {
         MoveDirection next = genes.get(i);
-        i = (i + 1) % genes.size();
+        i = animalBehaviour.getNext(random, i, genes.size());
         return next;
     }
 }

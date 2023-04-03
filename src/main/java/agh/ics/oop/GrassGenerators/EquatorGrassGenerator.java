@@ -1,4 +1,6 @@
-package agh.ics.oop;
+package agh.ics.oop.GrassGenerators;
+
+import agh.ics.oop.*;
 
 import java.util.Random;
 

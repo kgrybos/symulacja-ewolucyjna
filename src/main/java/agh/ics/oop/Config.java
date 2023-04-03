@@ -1,5 +1,9 @@
 package agh.ics.oop;
 
+import agh.ics.oop.AnimalBehaviours.AnimalBehaviourType;
+import agh.ics.oop.GrassGenerators.GrassGeneratorType;
+import agh.ics.oop.Mutators.MutatorType;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -50,14 +54,12 @@ public record Config(
         int maxMutations = Integer.parseInt(props.getProperty("MAX_MUTATIONS"));
         MutatorType mutator = switch (props.getProperty("MUTATOR")) {
             case "random" -> MutatorType.RANDOM;
-            //TODO
             case "slight" -> MutatorType.SLIGHT;
             default -> throw new IllegalArgumentException("Nie ma takiego wariantu mutacji");
         };
         int genomeSize = Integer.parseInt(props.getProperty("GENOME_SIZE"));
         AnimalBehaviourType animalBehaviour = switch (props.getProperty("ANIMAL_BEHAVIOUR")) {
             case "predestination" -> AnimalBehaviourType.PREDESTINATION;
-            //TODO
             case "crazy" -> AnimalBehaviourType.CRAZY;
             default -> throw new IllegalArgumentException("Nie ma takiego wariantu zachowania zwierzęcia");
         };

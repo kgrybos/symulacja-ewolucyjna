@@ -1,5 +1,7 @@
 package agh.ics.oop;
 
+import agh.ics.oop.GrassGenerators.EquatorGrassGenerator;
+import agh.ics.oop.GrassGenerators.GrassGenerator;
 import agh.ics.oop.gui.GraphicalMapVisualizer;
 import agh.ics.oop.observers.BirthEvent;
 import agh.ics.oop.observers.ElementEvent;
