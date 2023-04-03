@@ -48,6 +48,7 @@ public class GlobeTest {
         map.place(animal1);
 
         animal1.move(MoveDirection.LEFT);
+        animal1.move(MoveDirection.LEFT);
         animal1.move(MoveDirection.FORWARD);
         animal1.move(MoveDirection.FORWARD);
         animal1.move(MoveDirection.FORWARD);

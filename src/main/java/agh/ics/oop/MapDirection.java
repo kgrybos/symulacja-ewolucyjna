@@ -2,16 +2,24 @@ package agh.ics.oop;
 
 public enum MapDirection {
     NORTH,
+    NORTH_EAST,
     EAST,
+    SOUTH_EAST,
     SOUTH,
-    WEST;
+    SOUTH_WEST,
+    WEST,
+    NORTH_WEST;
 
     public String toString() {
         return switch (this) {
             case NORTH -> "🡡";
+            case NORTH_EAST -> "🡥";
             case EAST -> "🡢";
+            case SOUTH_EAST -> "🡦";
             case SOUTH -> "🡣";
+            case SOUTH_WEST -> "🡧";
             case WEST -> "🡠";
+            case NORTH_WEST -> "🡤";
         };
     }
 
@@ -30,15 +38,23 @@ public enum MapDirection {
     }
 
     public MapDirection opposite() {
-        return values[(this.ordinal() + 2) % values.length];
+        return values[(this.ordinal() + values.length/2) % values.length];
+    }
+
+    public MapDirection turn(int amount) {
+        return values[(this.ordinal() + amount) % values.length];
     }
 
     public Vector2d toUnitVector() {
         return switch (this) {
             case NORTH -> new Vector2d(0, 1);
+            case NORTH_EAST -> new Vector2d(1, 1);
             case EAST -> new Vector2d(1, 0);
+            case SOUTH_EAST -> new Vector2d(1, -1);
             case SOUTH -> new Vector2d(0, -1);
+            case SOUTH_WEST -> new Vector2d(-1, -1);
             case WEST -> new Vector2d(-1, 0);
+            case NORTH_WEST -> new Vector2d(-1, 1);
         };
     }
 }
