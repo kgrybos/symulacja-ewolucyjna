@@ -9,39 +9,19 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.util.Random;
 
 public class App extends Application {
-    private Globe worldMap;
-    private GraphicalMapVisualizer graphicalMapVisualizer;
     private SimulationEngine engine;
 
     @Override
     public void init() throws Exception {
         super.init();
 
-        worldMap = new Globe(50, 50);
-        graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
-        worldMap.addPositionsChangedObserver(graphicalMapVisualizer);
-
-        Random random = new Random(0);
-
         engine = new SimulationEngine(100);
-        for (int i = 0; i < 50; i++) {
-            new Animal.Builder(worldMap)
-                    .setRandom(random)
-                    .addAnimalEventObserver(worldMap)
-                    .addAnimalEventObserver(engine)
-                    .buildNew(8);
-        }
-
-        EquatorGrassGenerator equatorGrassGenerator = new EquatorGrassGenerator(random, worldMap.width, worldMap.height);
-        equatorGrassGenerator.generate(worldMap, 300);
     }
 
     public void start(Stage primaryStage) {
-        System.out.println(worldMap.toString());
-
+        GraphicalMapVisualizer graphicalMapVisualizer = engine.getGraphicalMapVisualizer();
         graphicalMapVisualizer.full_render();
 
         AnimalStatsBox animalStatsBox = new AnimalStatsBox();

@@ -12,6 +12,10 @@ public abstract class AbstractWorldMap implements IElementEventObserver {
     public final int width;
     public final int height;
     public final Boundary boundary;
+    private final Comparator<Animal> comparator = Comparator.comparing(Animal::getEnergy)
+            .thenComparing(Animal::getDaysAlive)
+            .thenComparing(Animal::getNumberOfChildren)
+            .thenComparing(System::identityHashCode);
 
     public AbstractWorldMap(int width, int height) {
         this.width = width;
@@ -54,11 +58,6 @@ public abstract class AbstractWorldMap implements IElementEventObserver {
     }
 
     public int getFood(Animal animal) {
-        Comparator<Animal> comparator = Comparator.comparing(Animal::getEnergy)
-                        .thenComparing(Animal::getDaysAlive)
-                        .thenComparing(Animal::getNumberOfChildren)
-                        .thenComparing(System::identityHashCode);
-
         Animal strongest = mapElements
                 .get(animal.getPosition())
                 .stream()
@@ -80,6 +79,28 @@ public abstract class AbstractWorldMap implements IElementEventObserver {
         }
 
         return 0;
+    }
+
+    public Optional<Animal> getPartner(Animal animal) {
+        List<Animal> animals = mapElements
+                .get(animal.getPosition())
+                .stream()
+                .filter(Animal.class::isInstance)
+                .map(Animal.class::cast)
+                .sorted(comparator.reversed())
+                .limit(2)
+                .toList();
+
+        if(animals.size() == 2) {
+            Animal stronger = animals.get(0);
+            Animal weaker = animals.get(1);
+
+            if(animal == stronger) {
+                return Optional.of(weaker);
+            }
+        }
+
+        return Optional.empty();
     }
 
     public abstract PosDir getPosDirToMove(AbstractMapElement element, MoveDirection move);
