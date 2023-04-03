@@ -40,6 +40,6 @@ public class Animal extends AbstractMapElement {
 
     @Override
     public String getImageFilename() {
-        return posDir.direction().getFilename();
+        return "animal.png";
     }
 }

@@ -28,7 +28,7 @@ public class App extends Application {
 //            MoveDirection[] directions = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"});
             Vector2d[] positions = {new Vector2d(3, 4), new Vector2d(1, 4)};
 
-            worldMap = new Globe(15, 15, 10);
+            worldMap = new Globe(100, 100, 1000);
             graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
 
             List<Animal> animals = new ArrayList<>();
