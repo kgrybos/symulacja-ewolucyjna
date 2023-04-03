@@ -127,7 +127,7 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
 
     public SimulationStats getStats() {
         int animalNumber = animals.size();
-        int freeFields = worldMap.width*worldMap.height-animalNumber-grassNumber;
+        int freeFields = worldMap.getFreeNumber();
 
         List<MoveDirection[]> mostPopularGenomes = getMostPopularGenomes();
 

@@ -46,6 +46,10 @@ public abstract class AbstractWorldMap implements IElementEventObserver {
         return ! objectsAt(position).isEmpty();
     }
 
+    public int getFreeNumber() {
+        return width*height - mapElements.keySet().size();
+    }
+
     public Collection<AbstractMapElement> objectsAt(Vector2d position) {
         return mapElements.get(position);
     }
