@@ -51,8 +51,7 @@ public abstract class AbstractWorldMap implements IElementEventObserver {
     }
 
     public Optional<AbstractMapElement> objectAt(Vector2d position, Class<? extends AbstractMapElement> type) {
-        Collection<AbstractMapElement> elements = objectsAt(position);
-        return elements
+        return mapElements.get(position)
                 .stream()
                 .filter(type::isInstance)
                 .findFirst();

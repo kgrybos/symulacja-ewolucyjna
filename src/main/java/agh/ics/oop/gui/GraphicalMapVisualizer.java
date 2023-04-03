@@ -62,18 +62,22 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
         }
     }
 
-    private void updateImage(Vector2d position) {
-        Optional<AbstractMapElement> element = map
+    private Optional<AbstractMapElement> getElementToRender(Vector2d position) {
+        return map
                 .objectAt(position, Animal.class)
                 .or(() -> map.objectAt(position, Grass.class));
+    }
 
-        element.ifPresent(value -> {
-            InputStream stream = Objects.requireNonNull(getClass().getResourceAsStream(value.getImageFilename()));
+    private void updateImage(Vector2d position, AbstractMapElement element) {
+        Platform.runLater(() -> {
+            cells[position.x][position.y].setImage(null);
+
+            InputStream stream = Objects.requireNonNull(getClass().getResourceAsStream(element.getImageFilename()));
             Image image = new Image(stream);
             cells[position.x][position.y].setImage(image);
 
             double brightness = 0;
-            if(value instanceof Animal animal) {
+            if(element instanceof Animal animal) {
                 brightness = 1-Doubles.constrainToRange(((double) animal.getEnergy()) / 100, 0, 1);
             }
 
@@ -84,27 +88,22 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
     }
 
     public void full_render() {
-        Platform.runLater(() -> {
-            // Map elements
-            for (int column = 0; column < map.width; column++) {
-                for (int row = 0; row < map.height; row++) {
-                    Vector2d position = new Vector2d(column, map.height - 1 - row);
-                    if (map.isOccupied(position)) {
-                        updateImage(position);
-                    }
+        // Map elements
+        for (int column = 0; column < map.width; column++) {
+            for (int row = 0; row < map.height; row++) {
+                Vector2d position = new Vector2d(column, map.height - 1 - row);
+                if (map.isOccupied(position)) {
+                    getElementToRender(position).ifPresent(element -> updateImage(position, element));
                 }
             }
-        });
+        }
     }
 
     @Override
     public void positionsChanged(List<Vector2d> positions) {
-        Platform.runLater(() -> {
-            for (Vector2d position : positions) {
-                cells[position.x][position.y].setImage(null);
-                updateImage(position);
-            }
-        });
+        for (Vector2d position : positions) {
+            getElementToRender(position).ifPresent(element -> updateImage(position, element));
+        }
     }
 
     public void highlightAnimals(List<Animal> animals) {
