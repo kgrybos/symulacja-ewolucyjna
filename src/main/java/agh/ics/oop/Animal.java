@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Animal extends AbstractMapElement {
-    private final List<IPositionChangeObserver> positionChangeObservers = new ArrayList<>();
+    private final List<IAnimalEventObserver> animalEventObservers = new ArrayList<>();
     private final AbstractWorldMap worldMap;
     private final Random random;
     private final Genome genome;
@@ -27,9 +27,20 @@ public class Animal extends AbstractMapElement {
         this.genome = genome;
     }
 
+    public int getEnergy() {
+        return energy;
+    }
+
     @Override
     public String toString() {
         return "Z " + posDir.position();
+    }
+
+    public void wakeUp() {
+        energy -= 1;
+        if(energy == 0) {
+            die();
+        }
     }
 
     public void move(MoveDirection direction) {
@@ -46,17 +57,23 @@ public class Animal extends AbstractMapElement {
         return new Animal(random, worldMap, posDir, childGenome);
     }
 
-    public void addObserver(IPositionChangeObserver observer) {
-        positionChangeObservers.add(observer);
+    public void addObserver(IAnimalEventObserver observer) {
+        animalEventObservers.add(observer);
     }
 
-    public void removeObserver(IPositionChangeObserver observer) {
-        positionChangeObservers.remove(observer);
+    public void removeObserver(IAnimalEventObserver observer) {
+        animalEventObservers.remove(observer);
     }
 
     private void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
-        for(IPositionChangeObserver observer : positionChangeObservers) {
-            observer.positionChanged(oldPosition, newPosition, this);
+        for(IAnimalEventObserver observer : animalEventObservers) {
+            observer.animalEvent(new PositionChangedEvent(oldPosition, newPosition, this));
+        }
+    }
+
+    private void die() {
+        for(IAnimalEventObserver observer : animalEventObservers) {
+            observer.animalEvent(new DeathEvent(posDir.position(), this));
         }
     }
 

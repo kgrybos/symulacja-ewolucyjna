@@ -1,9 +1,6 @@
 package agh.ics.oop.gui;
 
-import agh.ics.oop.AbstractWorldMap;
-import agh.ics.oop.AbstractMapElement;
-import agh.ics.oop.IPositionChangeObserver;
-import agh.ics.oop.Vector2d;
+import agh.ics.oop.*;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.image.Image;
@@ -15,7 +12,7 @@ import javafx.scene.layout.RowConstraints;
 import java.io.InputStream;
 import java.util.Objects;
 
-public class GraphicalMapVisualizer implements IPositionChangeObserver {
+public class GraphicalMapVisualizer implements IAnimalEventObserver {
     private final AbstractWorldMap map;
     public final GridPane gridPane;
     private final ImageView[][] cells;
@@ -81,13 +78,18 @@ public class GraphicalMapVisualizer implements IPositionChangeObserver {
     }
 
     @Override
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition, AbstractMapElement element) {
+    public void animalEvent(AnimalEvent animalEvent) {
         Platform.runLater(() -> {
-            cells[oldPosition.x][oldPosition.y].setImage(null);
-            cells[newPosition.x][newPosition.y].setImage(null);
+            if(animalEvent instanceof PositionChangedEvent event) {
+                cells[event.oldPosition.x][event.oldPosition.y].setImage(null);
+                cells[event.newPosition.x][event.newPosition.y].setImage(null);
 
-            updateImage(oldPosition);
-            updateImage(newPosition);
+                updateImage(event.oldPosition);
+                updateImage(event.newPosition);
+            } else if(animalEvent instanceof DeathEvent event) {
+                cells[event.position.x][event.position.y] = null;
+                updateImage(event.position);
+            }
         });
     }
 }

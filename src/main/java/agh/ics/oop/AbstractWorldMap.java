@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 
 import java.util.Collection;
 
-public abstract class AbstractWorldMap implements IPositionChangeObserver {
+public abstract class AbstractWorldMap implements IAnimalEventObserver {
     protected final Multimap<Vector2d, AbstractMapElement> mapElements = ArrayListMultimap.create();
     public final int width;
     public final int height;
@@ -20,9 +20,14 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver {
         boundary = new Boundary(lowerLeft, upperRight);
     }
 
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition, AbstractMapElement element) {
-        mapElements.remove(oldPosition, element);
-        mapElements.put(newPosition, element);
+    @Override
+    public void animalEvent(AnimalEvent animalEvent) {
+        if(animalEvent instanceof PositionChangedEvent event) {
+            mapElements.remove(event.oldPosition, event.animal);
+            mapElements.put(event.newPosition, event.animal);
+        } else if (animalEvent instanceof DeathEvent event) {
+            mapElements.remove(event.position, event.animal);
+        }
     }
 
     public boolean place(AbstractMapElement element) {
