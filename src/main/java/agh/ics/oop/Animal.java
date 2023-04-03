@@ -42,20 +42,21 @@ public class Animal extends AbstractMapElement {
         };
 
         if(worldMap.canMoveTo(newPosition)) {
-            positionChanged(position, newPosition);
+            Vector2d oldPosition = position;
             position = newPosition;
+            positionChanged(oldPosition, newPosition);
         }
     }
 
-    void addObserver(IPositionChangeObserver observer) {
+    public void addObserver(IPositionChangeObserver observer) {
         positionChangeObservers.add(observer);
     }
 
-    void removeObserver(IPositionChangeObserver observer) {
+    public void removeObserver(IPositionChangeObserver observer) {
         positionChangeObservers.remove(observer);
     }
 
-    void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
+    private void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
         for(IPositionChangeObserver observer : positionChangeObservers) {
             observer.positionChanged(oldPosition, newPosition);
         }
