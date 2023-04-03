@@ -6,6 +6,7 @@ import agh.ics.oop.WorldMaps.AbstractWorldMap;
 import agh.ics.oop.observers.*;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -50,7 +51,6 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
         for(int column = 0; column < map.width; column++) {
             for(int row = 0; row < map.height; row++) {
                 ImageView imageView = new ImageView();
-//                double imageSize = 0.9*cellSize;
                 imageView.setFitWidth(cellSize);
                 imageView.setFitHeight(cellSize);
 
@@ -70,6 +70,15 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
             InputStream stream = Objects.requireNonNull(getClass().getResourceAsStream(value.getImageFilename()));
             Image image = new Image(stream);
             cells[position.x][position.y].setImage(image);
+
+            double brightness = 0;
+            if(value instanceof Animal animal) {
+                brightness = (((double) animal.getEnergy())/100);
+            }
+
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setBrightness(brightness);
+            cells[position.x][position.y].setEffect(colorAdjust);
         });
     }
 
