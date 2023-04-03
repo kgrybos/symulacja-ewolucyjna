@@ -5,6 +5,7 @@ import java.util.List;
 
 public abstract class AbstractWorldMap implements IWorldMap {
     protected final List<IMapElement> mapElements = new ArrayList<>();
+    private final MapVisualizer mapVisualizer = new MapVisualizer(this);
 
     @Override
     public boolean place(Animal animal) {
@@ -18,13 +19,7 @@ public abstract class AbstractWorldMap implements IWorldMap {
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        for(IMapElement mapElement : mapElements) {
-            if(mapElement.getPosition().equals(position)) {
-                return true;
-            }
-        }
-
-        return false;
+        return objectAt(position) != null;
     }
 
     @Override
@@ -43,7 +38,6 @@ public abstract class AbstractWorldMap implements IWorldMap {
 
     @Override
     public String toString() {
-        MapVisualizer mapVisualizer = new MapVisualizer(this);
         return mapVisualizer.draw(lowerLeft(), upperRight());
     }
 }

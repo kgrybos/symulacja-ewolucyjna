@@ -33,9 +33,7 @@ public class GrassField extends AbstractWorldMap {
     protected Vector2d lowerLeft() {
         return mapElements
                 .stream()
-                .filter(el -> el instanceof Animal)
-                .map(el -> (Animal) el)
-                .map(Animal::getPosition)
+                .map(IMapElement::getPosition)
                 .reduce(Vector2d::lowerLeft)
                 .orElse(new Vector2d(-8, -8))
                 .subtract(new Vector2d(1, 1));
@@ -45,9 +43,7 @@ public class GrassField extends AbstractWorldMap {
     protected Vector2d upperRight() {
         return mapElements
                 .stream()
-                .filter(el -> el instanceof Animal)
-                .map(el -> (Animal) el)
-                .map(Animal::getPosition)
+                .map(IMapElement::getPosition)
                 .reduce(Vector2d::upperRight)
                 .orElse(new Vector2d(8, 8))
                 .add(new Vector2d(1, 1));

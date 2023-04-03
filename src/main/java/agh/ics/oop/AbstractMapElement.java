@@ -1,6 +1,6 @@
 package agh.ics.oop;
 
-public class AbstractMapElement implements IMapElement {
+public abstract class AbstractMapElement implements IMapElement {
     protected Vector2d position;
 
     public Vector2d getPosition() { return position; }
