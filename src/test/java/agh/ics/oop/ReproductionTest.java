@@ -9,13 +9,13 @@ public class ReproductionTest {
     void reproduceTest() {
         Globe worldMap = new Globe(10, 10);
 
-        Animal animal1 = new Animal.Builder(worldMap)
+        Animal animal1 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
-                .setEnergy(10)
+                .setEnergy(15)
                 .addAnimalEventObserver(worldMap)
                 .buildNew(8);
 
-        Animal animal2 = new Animal.Builder(worldMap)
+        Animal animal2 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(20)
                 .addAnimalEventObserver(worldMap)
@@ -33,13 +33,13 @@ public class ReproductionTest {
     void dontReproduceTest() {
         Globe worldMap = new Globe(10, 10);
 
-        Animal animal1 = new Animal.Builder(worldMap)
+        Animal animal1 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(7, 6)))
                 .setEnergy(10)
                 .addAnimalEventObserver(worldMap)
                 .buildNew(8);
 
-        Animal animal2 = new Animal.Builder(worldMap)
+        Animal animal2 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(20)
                 .addAnimalEventObserver(worldMap)
@@ -58,7 +58,7 @@ public class ReproductionTest {
     void foreverAloneTest() {
         Globe worldMap = new Globe(10, 10);
 
-        Animal animal = new Animal.Builder(worldMap)
+        Animal animal = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(10)
                 .addAnimalEventObserver(worldMap)
@@ -74,25 +74,25 @@ public class ReproductionTest {
     void conflictReproduceTest() {
         Globe worldMap = new Globe(10, 10);
 
-        Animal animal1 = new Animal.Builder(worldMap)
+        Animal animal1 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(10)
                 .addAnimalEventObserver(worldMap)
                 .buildNew(8);
 
-        Animal animal2 = new Animal.Builder(worldMap)
+        Animal animal2 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(20)
                 .addAnimalEventObserver(worldMap)
                 .buildNew(8);
 
-        Animal animal3 = new Animal.Builder(worldMap)
+        Animal animal3 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(15)
                 .addAnimalEventObserver(worldMap)
                 .buildNew(8);
 
-        Animal animal4 = new Animal.Builder(worldMap)
+        Animal animal4 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(7)
                 .addAnimalEventObserver(worldMap)

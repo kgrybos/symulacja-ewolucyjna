@@ -17,27 +17,32 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
     private boolean paused = true;
     private final AbstractWorldMap worldMap;
     private final GraphicalMapVisualizer graphicalMapVisualizer;
-    private final GrassGenerator grassGenerator;
+    private GrassGenerator grassGenerator;
+    private final Config config;
 
-    public SimulationEngine(int dayDelay) {
+    public SimulationEngine(int dayDelay, Config config) {
         this.dayDelay = dayDelay;
+        this.config = config;
 
-        worldMap = new Globe(50, 50);
+        worldMap = new Globe(config.mapWidth(), config.mapHeight());
         graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
         worldMap.addPositionsChangedObserver(graphicalMapVisualizer);
 
         Random random = new Random(0);
 
-        EquatorGrassGenerator equatorGrassGenerator = new EquatorGrassGenerator(random, worldMap.width, worldMap.height);
-        equatorGrassGenerator.generate(worldMap, 300);
-        grassGenerator = equatorGrassGenerator;
+        switch(config.grassGenerator()) {
+            case EQUATOR -> grassGenerator = new EquatorGrassGenerator(random, worldMap.width, worldMap.height, config);
+            case TOXIC -> throw new IllegalArgumentException();
+        }
+        grassGenerator.generate(worldMap, config.initialGrassNumber());
 
-        for (int i = 0; i < 100; i++) {
-            new Animal.Builder(worldMap)
+        for (int i = 0; i < config.initialAnimalNumber(); i++) {
+            new Animal.Builder(worldMap, config)
                     .setRandom(random)
+                    .setEnergy(config.initialAnimalEnergy())
                     .addAnimalEventObserver(worldMap)
                     .addAnimalEventObserver(this)
-                    .buildNew(8);
+                    .buildNew(config.genomeSize());
         }
     }
 
@@ -64,7 +69,7 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
             animal.reproduce();
         }
 
-        grassGenerator.generate(worldMap, 10);
+        grassGenerator.generate(worldMap, config.dailyNewGrass());
     }
 
     @Override

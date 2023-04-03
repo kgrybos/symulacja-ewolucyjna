@@ -13,7 +13,7 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        new Animal.Builder(map)
+        new Animal.Builder(map, Config.getFromFile("normal"))
                 .setRandom(random)
                 .addAnimalEventObserver(map)
                 .setPosDir(new PosDir(new Vector2d(1, 2)))
@@ -29,13 +29,13 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal1 =new Animal.Builder(map)
+        Animal animal1 =new Animal.Builder(map, Config.getFromFile("normal"))
                 .setRandom(random)
                 .addAnimalEventObserver(map)
                 .setPosDir(new PosDir(new Vector2d(1, 2)))
                 .buildNew(8);
 
-        Animal animal2 = new Animal.Builder(map)
+        Animal animal2 = new Animal.Builder(map, Config.getFromFile("normal"))
                 .setRandom(random)
                 .addAnimalEventObserver(map)
                 .setPosDir(new PosDir(new Vector2d(1, 3)))
@@ -54,7 +54,7 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal1 = new Animal.Builder(map)
+        Animal animal1 = new Animal.Builder(map, Config.getFromFile("normal"))
                 .setRandom(random)
                 .addAnimalEventObserver(map)
                 .setPosDir(new PosDir(new Vector2d(1, 2)))
@@ -72,7 +72,7 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal1 = new Animal.Builder(map)
+        Animal animal1 = new Animal.Builder(map, Config.getFromFile("normal"))
                 .setRandom(random)
                 .addAnimalEventObserver(map)
                 .setPosDir(new PosDir(new Vector2d(1, 2)))

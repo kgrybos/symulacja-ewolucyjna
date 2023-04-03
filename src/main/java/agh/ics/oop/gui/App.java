@@ -17,7 +17,9 @@ public class App extends Application {
     public void init() throws Exception {
         super.init();
 
-        engine = new SimulationEngine(100);
+        Config config = Config.getFromFile("normal");
+
+        engine = new SimulationEngine(100, config);
     }
 
     public void start(Stage primaryStage) {

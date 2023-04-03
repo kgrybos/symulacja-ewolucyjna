@@ -9,7 +9,7 @@ public class EatingTest {
     void eatTest() {
         Globe worldMap = new Globe(10, 10);
 
-        Animal animal = new Animal.Builder(worldMap)
+        Animal animal = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .addAnimalEventObserver(worldMap)
                 .buildNew(8);
@@ -28,7 +28,7 @@ public class EatingTest {
     void dontEatTest() {
         Globe worldMap = new Globe(10, 10);
 
-        Animal animal = new Animal.Builder(worldMap)
+        Animal animal = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(7, 7)))
                 .addAnimalEventObserver(worldMap)
                 .buildNew(8);
@@ -47,7 +47,7 @@ public class EatingTest {
     void conflictTest() {
         Globe worldMap = new Globe(10, 10);
 
-        Animal animal1 = new Animal.Builder(worldMap)
+        Animal animal1 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(16)
                 .addAnimalEventObserver(worldMap)
@@ -56,7 +56,7 @@ public class EatingTest {
             animal1.wakeUp();
         }
 
-        Animal animal2 = new Animal.Builder(worldMap)
+        Animal animal2 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(20)
                 .addAnimalEventObserver(worldMap)
@@ -65,7 +65,7 @@ public class EatingTest {
             animal2.wakeUp();
         }
 
-        Animal animal3 = new Animal.Builder(worldMap)
+        Animal animal3 = new Animal.Builder(worldMap, Config.getFromFile("normal"))
                 .setPosDir(new PosDir(new Vector2d(5, 5)))
                 .setEnergy(20)
                 .addAnimalEventObserver(worldMap)

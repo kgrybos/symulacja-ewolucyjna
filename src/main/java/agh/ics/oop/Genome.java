@@ -14,7 +14,7 @@ public class Genome {
         i = random.nextInt(genomeSize);
     }
 
-    public Genome(Random random, Genome stronger, Genome weaker, float ratio, Side strongerSide, int mutationLower, int mutationUpper) {
+    public Genome(Random random, Genome stronger, Genome weaker, float ratio, Side strongerSide, Config config) {
         int splitPoint = Math.round(stronger.genes.size()*ratio);
 
         List<MoveDirection> strongerGenes = switch (strongerSide) {
@@ -38,8 +38,8 @@ public class Genome {
             }
         }
 
-        if(mutationUpper-mutationLower > 0) {
-            int mutatedGenes = random.nextInt(mutationUpper - mutationLower) + mutationLower;
+        if(config.maxMutations()-config.minMutations() > 0) {
+            int mutatedGenes = random.nextInt(config.maxMutations() - config.minMutations()) + config.minMutations();
             List<Integer> mutations = randomUniqueNumbers(random, genes.size(), mutatedGenes);
             for (Integer mutation : mutations) {
                 genes.set(mutation, MoveDirection.random(random));

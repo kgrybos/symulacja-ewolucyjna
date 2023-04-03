@@ -15,16 +15,15 @@ public class Animal extends AbstractMapElement {
     private int numberOfChildren = 0;
     private int grassEaten = 0;
     private final int birthday;
-
+    private final Config config;
 
     private Animal(Builder builder) {
+        this.config = builder.config;
         this.worldMap = builder.worldMap;
         this.random = Objects.requireNonNullElseGet(builder.random, Random::new);
         this.animalEventObservers = builder.animalEventObservers;
         this.animalStatsObservers = builder.animalStatsObservers;
         this.posDir = Objects.requireNonNullElseGet(builder.posDir, () -> new PosDir(worldMap.boundary.randomInside(random)));
-
-        //TODO: Get value from config
         this.energy = Objects.requireNonNullElseGet(builder.energy, () -> random.nextInt(10)+15);
         this.genome = Objects.requireNonNullElseGet(builder.genome, () -> new Genome(random, builder.genomeSize));
         this.birthday = Objects.requireNonNullElse(builder.birthday, 0);
@@ -78,20 +77,20 @@ public class Animal extends AbstractMapElement {
         Optional<Animal> partner = worldMap.getPartner(this);
         if(partner.isPresent()) {
             Animal weaker = partner.get();
-            if(this.energy > 5 && weaker.energy > 5){
+            if(this.energy > config.satiatedEnergy() && weaker.energy > config.satiatedEnergy()){
                 this.numberOfChildren += 1;
                 weaker.numberOfChildren += 1;
 
-                this.energy -= 5;
-                weaker.energy -= 5;
+                this.energy -= config.energyForNewborn();
+                weaker.energy -= config.energyForNewborn();
 
                 float ratio = ((float) energy) / (energy + weaker.energy);
                 Side side = Side.random(random);
-                Genome childGenome = new Genome(random, this.genome, weaker.genome, ratio, side, 0, 2);
-                new Builder(worldMap)
+                Genome childGenome = new Genome(random, this.genome, weaker.genome, ratio, side, config);
+                new Builder(worldMap, config)
                         .setRandom(random)
                         .addAnimalEventObserverAll(animalEventObservers)
-                        .setEnergy(10)
+                        .setEnergy(config.energyForNewborn()*2)
                         .setPosDir(posDir)
                         .setBirthday(birthday + daysAlive)
                         .buildBorn(childGenome);
@@ -151,11 +150,13 @@ public class Animal extends AbstractMapElement {
         private PosDir posDir;
         private Integer energy;
         private Integer birthday;
+        private final Config config;
         private final List<IElementEventObserver> animalEventObservers = new ArrayList<>();
         private final List<IAnimalStatsObserver> animalStatsObservers = new ArrayList<>();
 
-        public Builder(AbstractWorldMap worldMap) {
+        public Builder(AbstractWorldMap worldMap, Config config) {
             this.worldMap = worldMap;
+            this.config = config;
         }
 
         public Builder setRandom(Random random) {

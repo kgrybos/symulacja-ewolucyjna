@@ -7,9 +7,11 @@ public class EquatorGrassGenerator implements GrassGenerator {
     private final Boundary northBoundary;
     private final Boundary equatorBoundary;
     private final Boundary southBoundary;
+    private final int energyFromGrass;
 
-    public EquatorGrassGenerator(Random random, int mapWidth, int mapHeight) {
+    public EquatorGrassGenerator(Random random, int mapWidth, int mapHeight, Config config) {
         this.random = random;
+        this.energyFromGrass = config.energyFromGrass();
 
         double equatorArea = mapWidth*mapHeight*0.2;
         int equatorHeight = (int) equatorArea/mapWidth;
@@ -42,8 +44,7 @@ public class EquatorGrassGenerator implements GrassGenerator {
             }
 
             if(map.objectAt(position, Grass.class).isEmpty()) {
-                //TODO: Get from config
-                new Grass.Builder(position, 10)
+                new Grass.Builder(position, energyFromGrass)
                         .addGrassEventObserver(map)
                         .build();
             }
