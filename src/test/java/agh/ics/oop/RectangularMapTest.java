@@ -55,4 +55,15 @@ public class RectangularMapTest {
 
         assertEquals(expected, map.toString());
     }
+
+    @Test
+    void placeTwiceTest() {
+        RectangularMap map = new RectangularMap(3, 3);
+        Animal animal1 = new Animal(map, new Vector2d(1, 2));
+        Animal animal2 = new Animal(map, new Vector2d(1, 2));
+        map.place(animal1);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> map.place(animal2));
+        assertEquals("Animal can't be placed on position: (1, 2)", exception.getMessage());
+    }
 }

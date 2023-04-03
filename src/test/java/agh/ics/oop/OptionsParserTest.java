@@ -18,9 +18,11 @@ public class OptionsParserTest {
                 parse(new String[]{})
         );
 
-        assertArrayEquals(
-                new MoveDirection[]{MoveDirection.FORWARD, MoveDirection.BACKWARD},
-                parse(new String[]{"f", "x", "sdsdfsdf", "b"})
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> parse(new String[]{"f", "x", "sdsdfsdf", "b"})
         );
+
+        assertEquals("x is not legal move specification", exception.getMessage());
     }
 }

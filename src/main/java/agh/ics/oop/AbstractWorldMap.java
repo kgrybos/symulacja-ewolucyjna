@@ -20,10 +20,11 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         if(canMoveTo(position)) {
             animal.addObserver(this);
             mapElements.put(position, animal);
-            return true;
         } else {
-            return false;
+            throw new IllegalArgumentException("Animal can't be placed on position: " + position);
         }
+
+        return true;
     }
 
     @Override
