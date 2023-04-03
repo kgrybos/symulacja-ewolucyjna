@@ -9,10 +9,7 @@ import agh.ics.oop.WorldMaps.HellPortal;
 import agh.ics.oop.gui.GraphicalMapVisualizer;
 import agh.ics.oop.observers.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
@@ -111,21 +108,28 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
         }
     }
 
+    private List<MoveDirection[]> getMostPopularGenomes() {
+        return animals
+                .stream()
+                .map(el -> List.of(el.getGenes()))
+                .collect(Collectors.groupingBy(
+                        el->el,
+                        Collectors.counting()
+                ))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<List<MoveDirection>, Long>comparingByValue().reversed())
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .map(el -> el.toArray(new MoveDirection[]{}))
+                .toList();
+    }
+
     public SimulationStats getStats() {
         int animalNumber = animals.size();
         int freeFields = worldMap.width*worldMap.height-animalNumber-grassNumber;
 
-        List<MoveDirection[]> mostPopularGenomes = animals
-                .stream()
-                .map(Animal::getGenes)
-                .collect(Collectors.groupingBy(el -> el,
-                        Collectors.counting()))
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.<MoveDirection[], Long>comparingByValue().reversed())
-                .limit(3)
-                .map(Map.Entry::getKey)
-                .toList();
+        List<MoveDirection[]> mostPopularGenomes = getMostPopularGenomes();
 
         double averageEnergy = animals
                 .stream()
@@ -173,6 +177,13 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
         notify();
     }
 
+    private List<Animal> getAnimalsWithTopGenome() {
+        MoveDirection[] mostPopularGenome = getMostPopularGenomes().get(0);
+        return animals.stream()
+                .filter(el -> Arrays.equals(el.getGenes(), mostPopularGenome))
+                .toList();
+    }
+
     @Override
     public synchronized void run() {
         try {
@@ -180,7 +191,9 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
             while(true) {
                 simulateDay();
                 if (paused) {
+                    graphicalMapVisualizer.highlightAnimals(getAnimalsWithTopGenome());
                     wait();
+                    graphicalMapVisualizer.full_render();
                 } else {
                     sleep(dayDelay);
                 }

@@ -74,7 +74,7 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
 
             double brightness = 0;
             if(value instanceof Animal animal) {
-                brightness = Doubles.constrainToRange(((double) animal.getEnergy()) / 100, 0, 1);
+                brightness = 1-Doubles.constrainToRange(((double) animal.getEnergy()) / 100, 0, 1);
             }
 
             ColorAdjust colorAdjust = new ColorAdjust();
@@ -84,15 +84,17 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
     }
 
     public void full_render() {
-        // Map elements
-        for(int column = 0; column < map.width; column++) {
-            for(int row = 0; row < map.height; row++) {
-                Vector2d position = new Vector2d(column, map.height-1 - row );
-                if(map.isOccupied(position)) {
-                    updateImage(position);
+        Platform.runLater(() -> {
+            // Map elements
+            for (int column = 0; column < map.width; column++) {
+                for (int row = 0; row < map.height; row++) {
+                    Vector2d position = new Vector2d(column, map.height - 1 - row);
+                    if (map.isOccupied(position)) {
+                        updateImage(position);
+                    }
                 }
             }
-        }
+        });
     }
 
     @Override
@@ -101,6 +103,18 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
             for (Vector2d position : positions) {
                 cells[position.x][position.y].setImage(null);
                 updateImage(position);
+            }
+        });
+    }
+
+    public void highlightAnimals(List<Animal> animals) {
+        Platform.runLater(() -> {
+            for(Animal animal : animals) {
+                Vector2d position = animal.getPosition();
+                InputStream stream = Objects.requireNonNull(getClass().getResourceAsStream("highlight.png"));
+                Image image = new Image(stream);
+                cells[position.x][position.y].setImage(image);
+                cells[position.x][position.y].setEffect(null);
             }
         });
     }
