@@ -16,7 +16,7 @@ public class Vector2dTest {
         assertNotEquals(a, b);
 
         Object c = new Object();
-        assertNotEquals(a, b);
+        assertNotEquals(a, c);
     }
 
     @Test
@@ -82,17 +82,17 @@ public class Vector2dTest {
     }
 
     @Test
-    void addSubstractTest() {
+    void addSubtractTest() {
         Vector2d a = new Vector2d(5, -5);
         Vector2d b = new Vector2d(7, 8);
         assertEquals(new Vector2d(12, 3), a.add(b));
-        assertEquals(new Vector2d(-2, -13), a.substract(b));
-        assertEquals(new Vector2d(2, 13), b.substract(a));
+        assertEquals(new Vector2d(-2, -13), a.subtract(b));
+        assertEquals(new Vector2d(2, 13), b.subtract(a));
 
         a = new Vector2d(1000, -1000);
         b = new Vector2d(2000, 2000);
         assertEquals(new Vector2d(3000, 1000), a.add(b));
-        assertEquals(new Vector2d(-1000, -3000), a.substract(b));
+        assertEquals(new Vector2d(-1000, -3000), a.subtract(b));
     }
 
     @Test
