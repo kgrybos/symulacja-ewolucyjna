@@ -2,6 +2,7 @@ package agh.ics.oop;
 
 import agh.ics.oop.GrassGenerators.EquatorGrassGenerator;
 import agh.ics.oop.GrassGenerators.GrassGenerator;
+import agh.ics.oop.GrassGenerators.ToxicCorpsesGrassGenerator;
 import agh.ics.oop.WorldMaps.AbstractWorldMap;
 import agh.ics.oop.WorldMaps.Globe;
 import agh.ics.oop.WorldMaps.HellPortal;
@@ -38,12 +39,6 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
         graphicalMapVisualizer = new GraphicalMapVisualizer(worldMap);
         worldMap.addPositionsChangedObserver(graphicalMapVisualizer);
 
-        switch(config.grassGenerator()) {
-            case EQUATOR -> grassGenerator = new EquatorGrassGenerator(random, worldMap.width, worldMap.height, config);
-            case TOXIC -> throw new IllegalArgumentException();
-        }
-        grassGenerator.generate(worldMap, config.initialGrassNumber());
-
         for (int i = 0; i < config.initialAnimalNumber(); i++) {
             new Animal.Builder(worldMap, config)
                     .setRandom(random)
@@ -51,6 +46,18 @@ public class SimulationEngine implements Runnable, IElementEventObserver {
                     .addAnimalEventObserver(worldMap)
                     .addAnimalEventObserver(this)
                     .buildNew(config.genomeSize());
+        }
+
+        switch(config.grassGenerator()) {
+            case EQUATOR -> grassGenerator = new EquatorGrassGenerator(random, config, worldMap.width, worldMap.height);
+            case TOXIC -> grassGenerator = new ToxicCorpsesGrassGenerator(random, config, worldMap.width, worldMap.height);
+        }
+        grassGenerator.generate(worldMap, config.initialGrassNumber());
+
+        if(grassGenerator instanceof ToxicCorpsesGrassGenerator toxicCorpsesGrassGenerator) {
+            for(Animal animal : animals) {
+                animal.addEventObserver(toxicCorpsesGrassGenerator);
+            }
         }
     }
 

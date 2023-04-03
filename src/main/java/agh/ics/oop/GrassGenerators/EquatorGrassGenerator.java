@@ -12,7 +12,7 @@ public class EquatorGrassGenerator implements GrassGenerator {
     private final Boundary southBoundary;
     private final int energyFromGrass;
 
-    public EquatorGrassGenerator(Random random, int mapWidth, int mapHeight, Config config) {
+    public EquatorGrassGenerator(Random random, Config config, int mapWidth, int mapHeight) {
         this.random = random;
         this.energyFromGrass = config.energyFromGrass();
 
