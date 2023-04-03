@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0bb962c-611a-40b0-b15f-405743f189e3" name="Changes" comment="Add MapBoundary">
-      <change afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/MapBoundary.java" afterDir="false" />
+    <list default="true" id="b0bb962c-611a-40b0-b15f-405743f189e3" name="Changes" comment="Add graphical interface">
+      <change afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/gui/App.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/gui/GraphicalMapVisualizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/src/main/java/agh/ics/oop/AbstractWorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/AbstractWorldMap.java" afterDir="false" />
@@ -24,6 +26,13 @@
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/agh/ics/oop/GrassField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/GrassField.java" afterDir="false" />
 >>>>>>> c9dea20 (Add MapBoundary)
+=======
+      <change beforePath="$PROJECT_DIR$/src/main/java/agh/ics/oop/AbstractWorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/AbstractWorldMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/agh/ics/oop/GrassField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/GrassField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/agh/ics/oop/SimulationEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/SimulationEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/agh/ics/oop/Vector2d.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/Vector2d.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/agh/ics/oop/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/agh/ics/oop/World.java" afterDir="false" />
+>>>>>>> 2caf7e6 (Add graphical interface)
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +114,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;proofread&quot;
   }
 }</component>
-  <component name="RunManager" selected="Gradle.Tests in 'obiektowe'">
+  <component name="RunManager" selected="Application.World">
     <configuration name="World" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="agh.ics.oop.World" />
       <module name="obiektowe.main" />
@@ -330,7 +339,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668697216677</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Add MapBoundary">
+      <created>1669808608369</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1669808608369</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -398,6 +414,18 @@
     <MESSAGE value="Laboratorium 6" />
     <MESSAGE value="Laboratorium 7 - Exceptions" />
     <MESSAGE value="Add MapBoundary" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add MapBoundary" />
+    <MESSAGE value="Add graphical interface" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add graphical interface" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/agh/ics/oop/AbstractWorldMap.java</url>
+          <line>15</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -24,14 +24,14 @@ public class GrassField extends AbstractWorldMap {
         }
     }
 
-    GrassField(int tuftNumber) {
+    public GrassField(int tuftNumber) {
         this(tuftNumber, new Date().getTime());
     }
 
     public boolean place(Animal animal) {
         boolean result = super.place(animal);
         mapBoundary.put(animal);
-        animal.addObserver(this);
+        animal.addObserver(mapBoundary);
         return result;
     }
 
