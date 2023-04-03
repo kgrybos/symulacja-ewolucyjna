@@ -7,7 +7,9 @@ import agh.ics.oop.WorldMaps.WorldMapType;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,11 +44,10 @@ public record Config (
     }
 
     public static Config getFromFile(Path path) {
-        Properties props;
+        Properties props = new Properties();
         try {
             InputStream propsInput = Files.newInputStream(path);
-            props = new Properties();
-            props.load(propsInput);
+            props.load(new InputStreamReader(propsInput, StandardCharsets.UTF_8));
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
