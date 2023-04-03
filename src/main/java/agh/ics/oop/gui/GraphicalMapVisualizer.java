@@ -70,8 +70,6 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
 
     private void updateImage(Vector2d position, AbstractMapElement element) {
         Platform.runLater(() -> {
-            cells[position.x][position.y].setImage(null);
-
             InputStream stream = Objects.requireNonNull(getClass().getResourceAsStream(element.getImageFilename()));
             Image image = new Image(stream);
             cells[position.x][position.y].setImage(image);
@@ -85,6 +83,10 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
             colorAdjust.setBrightness(brightness);
             cells[position.x][position.y].setEffect(colorAdjust);
         });
+    }
+
+    private void clearImage(Vector2d position) {
+        Platform.runLater(() -> cells[position.x][position.y].setImage(null));
     }
 
     public void full_render() {
@@ -102,7 +104,10 @@ public class GraphicalMapVisualizer implements IPositionsChangedObserver {
     @Override
     public void positionsChanged(List<Vector2d> positions) {
         for (Vector2d position : positions) {
-            getElementToRender(position).ifPresent(element -> updateImage(position, element));
+            getElementToRender(position).ifPresentOrElse(
+                    element -> updateImage(position, element),
+                    () -> clearImage(position)
+            );
         }
     }
 
