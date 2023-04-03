@@ -1,33 +1,30 @@
 package agh.ics.oop;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class Animal extends AbstractMapElement {
     private final List<IAnimalEventObserver> animalEventObservers;
+    private final List<IAnimalStatsObserver> animalStatsObservers;
     private final AbstractWorldMap worldMap;
     private final Random random;
     private final Genome genome;
     private int energy;
 
-    public Animal(Random random, List<IAnimalEventObserver> observers, int genomeSize, AbstractWorldMap worldMap, Vector2d position) {
-        this.worldMap = worldMap;
-        this.random = random;
-        this.animalEventObservers = observers;
-        this.posDir = new PosDir(position);
-        this.energy = random.nextInt(10)+15;
-        this.genome = new Genome(random, genomeSize);
+    private Animal(Builder builder) {
+        this.worldMap = builder.worldMap;
+        this.random = Objects.requireNonNullElseGet(builder.random, Random::new);
+        this.animalEventObservers = builder.animalEventObservers;
+        this.animalStatsObservers = builder.animalStatsObservers;
+        this.posDir = Objects.requireNonNullElseGet(builder.posDir, () -> new PosDir(worldMap.boundary.randomInside(random)));
 
-        notifyObservers(new BirthEvent(posDir.position(), this));
-    }
+        //TODO: Get value from config
+        this.energy = Objects.requireNonNullElseGet(builder.energy, () -> random.nextInt(10)+15);
+        this.genome = Objects.requireNonNullElseGet(builder.genome, () -> new Genome(random, builder.genomeSize));
 
-    private Animal(Random random, List<IAnimalEventObserver> observers, AbstractWorldMap worldMap, PosDir posDir, Genome genome) {
-        this.worldMap = worldMap;
-        this.random = random;
-        this.animalEventObservers = observers;
-        this.posDir = posDir;
-        this.energy = random.nextInt(10)+1;
-        this.genome = genome;
+        notifyObservers(new BirthEvent(this.posDir.position(), this));
     }
 
     public int getEnergy() {
@@ -56,7 +53,11 @@ public class Animal extends AbstractMapElement {
         float ratio = ((float) energy)/(energy + weaker.energy);
         Side side = Side.random(random);
         Genome childGenome = new Genome(random, this.genome, weaker.genome, ratio, side);
-        return new Animal(random, animalEventObservers, worldMap, posDir, childGenome);
+        return new Builder(worldMap)
+                .setRandom(random)
+                .addAnimalEventObserverAll(animalEventObservers)
+                .setPosDir(posDir)
+                .buildBorn(childGenome);
     }
 
     public void addObserver(IAnimalEventObserver observer) {
@@ -76,5 +77,62 @@ public class Animal extends AbstractMapElement {
     @Override
     public String getImageFilename() {
         return "animal.png";
+    }
+
+    public static class Builder {
+        private final AbstractWorldMap worldMap;
+        private Random random;
+        private int genomeSize;
+        private Genome genome;
+        private PosDir posDir;
+        private Integer energy;
+        private final List<IAnimalEventObserver> animalEventObservers = new ArrayList<>();
+        private final List<IAnimalStatsObserver> animalStatsObservers = new ArrayList<>();
+
+        public Builder(AbstractWorldMap worldMap) {
+            this.worldMap = worldMap;
+        }
+
+        public Builder setRandom(Random random) {
+            this.random = random;
+            return this;
+        }
+
+        public Builder addAnimalEventObserver(IAnimalEventObserver observer) {
+            this.animalEventObservers.add(observer);
+            return this;
+        }
+        public Builder addAnimalEventObserverAll(List<IAnimalEventObserver> observers) {
+            this.animalEventObservers.addAll(observers);
+            return this;
+        }
+        public Builder addAnimalStatsObserver(IAnimalStatsObserver observer) {
+            this.animalStatsObservers.add(observer);
+            return this;
+        }
+        public Builder addAnimalStatsObserverAll(List<IAnimalStatsObserver> observers) {
+            this.animalStatsObservers.addAll(observers);
+            return this;
+        }
+
+        public Builder setPosDir(PosDir posDir) {
+            this.posDir = posDir;
+            return this;
+        }
+
+        public Builder setEnergy(int energy) {
+            this.energy = energy;
+            return this;
+        }
+
+        public Animal buildNew(int genomeSize) {
+            this.genomeSize = genomeSize;
+            return new Animal(this);
+        }
+
+        public Animal buildBorn(Genome genome) {
+            this.genome = genome;
+            return new Animal(this);
+        }
     }
 }

@@ -26,19 +26,14 @@ public class App extends Application {
         Random random = new Random(0);
 
         engine = new SimulationEngine(300);
-
-        List<IAnimalEventObserver> observers = new ArrayList<>();
-        observers.add(worldMap);
-        observers.add(engine);
-        observers.add(graphicalMapVisualizer);
         for (Vector2d position : positions) {
-            new Animal(
-                    random,
-                    observers,
-                    8,
-                    worldMap,
-                    position
-            );
+            new Animal.Builder(worldMap)
+                    .setRandom(random)
+                    .addAnimalEventObserver(worldMap)
+                    .addAnimalEventObserver(engine)
+                    .addAnimalEventObserver(graphicalMapVisualizer)
+                    .setPosDir(new PosDir(position))
+                    .buildNew(8);
         }
 
         EquatorGrassGenerator equatorGrassGenerator = new EquatorGrassGenerator(random, worldMap.width, worldMap.height);
