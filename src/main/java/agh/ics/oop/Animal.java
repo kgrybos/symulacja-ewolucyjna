@@ -49,6 +49,12 @@ public class Animal extends AbstractMapElement {
         notifyObservers(new PositionChangedEvent(oldPosition, posDir.position(), this));
     }
 
+    public void move(MoveDirection move) {
+        Vector2d oldPosition = posDir.position();
+        posDir = worldMap.getPosDirToMove(this, move);
+        notifyObservers(new PositionChangedEvent(oldPosition, posDir.position(), this));
+    }
+
     public Animal reproduce(Animal weaker) {
         float ratio = ((float) energy)/(energy + weaker.energy);
         Side side = Side.random(random);

@@ -12,8 +12,11 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal = new Animal(random, 8, map, new Vector2d(1, 2));
-        map.place(animal);
+        new Animal.Builder(map)
+                .setRandom(random)
+                .addAnimalEventObserver(map)
+                .setPosDir(new PosDir(new Vector2d(1, 2)))
+                .buildNew(8);
 
         assertTrue(map.isOccupied(new Vector2d(1, 2)));
         assertFalse(map.isOccupied(new Vector2d(1, 3)));
@@ -25,11 +28,17 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal1 = new Animal(random, 8, map, new Vector2d(1, 2));
-        map.place(animal1);
+        Animal animal1 =new Animal.Builder(map)
+                .setRandom(random)
+                .addAnimalEventObserver(map)
+                .setPosDir(new PosDir(new Vector2d(1, 2)))
+                .buildNew(8);
 
-        Animal animal2 = new Animal(random, 8, map, new Vector2d(1, 3));
-        map.place(animal2);
+        Animal animal2 = new Animal.Builder(map)
+                .setRandom(random)
+                .addAnimalEventObserver(map)
+                .setPosDir(new PosDir(new Vector2d(1, 3)))
+                .buildNew(8);
 
         assertEquals(animal1, map.objectAt(new Vector2d(1, 2)));
         assertEquals(animal2, map.objectAt(new Vector2d(1, 3)));
@@ -44,12 +53,13 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal1 = new Animal(random, 8, map, new Vector2d(1, 2));
-        map.place(animal1);
+        Animal animal1 = new Animal.Builder(map)
+                .setRandom(random)
+                .addAnimalEventObserver(map)
+                .setPosDir(new PosDir(new Vector2d(1, 2)))
+                .buildNew(8);
 
         animal1.move(MoveDirection.LEFT);
-        animal1.move(MoveDirection.LEFT);
-        animal1.move(MoveDirection.FORWARD);
         animal1.move(MoveDirection.FORWARD);
         animal1.move(MoveDirection.FORWARD);
         animal1.move(MoveDirection.FORWARD);
@@ -61,8 +71,11 @@ public class GlobeTest {
         Globe map = new Globe(5, 5);
         Random random = new Random();
 
-        Animal animal1 = new Animal(random, 8, map,  new Vector2d(1, 2));
-        map.place(animal1);
+        Animal animal1 = new Animal.Builder(map)
+                .setRandom(random)
+                .addAnimalEventObserver(map)
+                .setPosDir(new PosDir(new Vector2d(1, 2)))
+                .buildNew(8);
 
         animal1.move(MoveDirection.FORWARD);
         animal1.move(MoveDirection.FORWARD);

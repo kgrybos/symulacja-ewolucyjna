@@ -11,13 +11,13 @@ public class GenomeTest {
     void randomGenesTest() {
         Random random = new Random(0);
         Genome genome = new Genome(random, 3);
-        assertEquals((byte) 1, genome.nextGene());
-        assertEquals((byte) 5, genome.nextGene());
-        assertEquals((byte) 6, genome.nextGene());
-        assertEquals((byte) 1, genome.nextGene());
-        assertEquals((byte) 5, genome.nextGene());
-        assertEquals((byte) 6, genome.nextGene());
-        assertEquals((byte) 1, genome.nextGene());
+        assertEquals(MoveDirection.FORWARD_RIGHT, genome.nextGene());
+        assertEquals(MoveDirection.BACKWARD_LEFT, genome.nextGene());
+        assertEquals(MoveDirection.LEFT, genome.nextGene());
+        assertEquals(MoveDirection.FORWARD_RIGHT, genome.nextGene());
+        assertEquals(MoveDirection.BACKWARD_LEFT, genome.nextGene());
+        assertEquals(MoveDirection.LEFT, genome.nextGene());
+        assertEquals(MoveDirection.FORWARD_RIGHT, genome.nextGene());
     }
 
     @Test
@@ -25,23 +25,23 @@ public class GenomeTest {
         Random random = new Random(0);
 
         Genome parent1 = new Genome(random, 3);
-        assertEquals((byte) 1, parent1.nextGene());
-        assertEquals((byte) 5, parent1.nextGene());
-        assertEquals((byte) 6, parent1.nextGene());
+        assertEquals(MoveDirection.FORWARD_RIGHT, parent1.nextGene());
+        assertEquals(MoveDirection.BACKWARD_LEFT, parent1.nextGene());
+        assertEquals(MoveDirection.LEFT, parent1.nextGene());
 
         Genome parent2 = new Genome(random, 3);
-        assertEquals((byte) 4, parent2.nextGene());
-        assertEquals((byte) 4, parent2.nextGene());
-        assertEquals((byte) 0, parent2.nextGene());
+        assertEquals(MoveDirection.BACKWARD_LEFT, parent2.nextGene());
+        assertEquals(MoveDirection.RIGHT, parent2.nextGene());
+        assertEquals(MoveDirection.BACKWARD, parent2.nextGene());
 
         Genome child = new Genome(random, parent1, parent2, 0.7F, Side.LEFT);
 
-        assertEquals((byte) 6, child.nextGene());
-        assertEquals((byte) 4, child.nextGene());
-        assertEquals((byte) 5, child.nextGene());
-        assertEquals((byte) 6, child.nextGene());
-        assertEquals((byte) 4, child.nextGene());
-        assertEquals((byte) 5, child.nextGene());
-        assertEquals((byte) 6, child.nextGene());
+        assertEquals(MoveDirection.BACKWARD_LEFT, child.nextGene());
+        assertEquals(MoveDirection.LEFT, child.nextGene());
+        assertEquals(MoveDirection.BACKWARD, child.nextGene());
+        assertEquals(MoveDirection.BACKWARD_LEFT, child.nextGene());
+        assertEquals(MoveDirection.LEFT, child.nextGene());
+        assertEquals(MoveDirection.BACKWARD, child.nextGene());
+        assertEquals(MoveDirection.BACKWARD_LEFT, child.nextGene());
     }
 }
