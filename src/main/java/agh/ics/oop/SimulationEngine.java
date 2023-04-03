@@ -1,47 +1,48 @@
 package agh.ics.oop;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
 
-public class SimulationEngine implements IEngine, Runnable {
-    private MoveDirection[] moves = new MoveDirection[]{};
-    private final List<Animal> animals;
-    private final int moveDelay;
+public class SimulationEngine implements Runnable, IAnimalEventObserver {
+    private final List<Animal> animals = new ArrayList<>();
+    private final int dayDelay;
 
-    public SimulationEngine(MoveDirection[] moves, List<Animal> animals, int moveDelay) {
-        this.moves = moves;
-        this.animals = animals;
-        this.moveDelay = moveDelay;
+    public SimulationEngine(int dayDelay) {
+        this.dayDelay = dayDelay;
     }
 
-    public SimulationEngine(List<Animal> animals, int moveDelay) {
-        this.animals = animals;
-        this.moveDelay = moveDelay;
+    public void simulateDay() {
+        for(Animal animal : animals) {
+            animal.wakeUp();
+        }
+        animals.removeIf((animal -> animal.getEnergy() <= 0));
+
+        for(Animal animal : animals) {
+            animal.move();
+        }
     }
 
-    public void setMoveDirections(String directions) {
-        String[] directionsSplitted = directions.split("\\s+");
-        moves = OptionsParser.parse(directionsSplitted);
+    @Override
+    public void animalEvent(AnimalEvent animalEvent) {
+        if(animalEvent instanceof BirthEvent event) {
+            animals.add(event.animal);
+        }
     }
 
     @Override
     public void run() {
-        Iterator<Animal> animalIterator = animals.iterator();
-
-        for(MoveDirection move : moves) {
+        int i = 0;
+        while(true) {
+            System.out.println("Dzień: " + i);
+            simulateDay();
+            i += 1;
             try {
-                sleep(moveDelay);
-            } catch(InterruptedException exception) {
-                System.out.println("Simulation stopped.");
-            }
-
-            Animal currentAnimal = animalIterator.next();
-            currentAnimal.move(move);
-
-            if(!animalIterator.hasNext()) {
-                animalIterator = animals.iterator();
+                //TODO: Przemyśleć to
+                sleep(dayDelay);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
     }

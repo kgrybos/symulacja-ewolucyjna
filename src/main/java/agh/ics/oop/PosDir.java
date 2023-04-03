@@ -18,18 +18,8 @@ public record PosDir(
     }
 
     public PosDir move(MoveDirection moveDirection) {
-        MapDirection newDirection = switch(moveDirection) {
-            case LEFT -> direction.previous();
-            case RIGHT -> direction.next();
-            default -> direction;
-        };
-
-        Vector2d newPosition = switch (moveDirection) {
-            case FORWARD -> position.add(newDirection.toUnitVector());
-            case BACKWARD -> position.subtract(newDirection.toUnitVector());
-            default -> position;
-        };
-
+        MapDirection newDirection = direction.turn(moveDirection.getValue());
+        Vector2d newPosition = position.add(newDirection.toUnitVector());
         return new PosDir(newPosition, newDirection);
     }
 }

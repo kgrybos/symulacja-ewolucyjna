@@ -5,20 +5,18 @@ public class Globe extends AbstractWorldMap {
         super(width, height);
     }
 
-    public boolean place(Animal animal) {
-        return super.place(animal);
-    }
-
     @Override
-    public PosDir getPosDirToMove(AbstractMapElement element, PosDir requestedPosDir) {
-        if(boundary.isInside(requestedPosDir.position())) {
-            return requestedPosDir;
-        } else if(boundary.isLeft(requestedPosDir.position())) {
+    public PosDir getPosDirToMove(AbstractMapElement element, MoveDirection moveDirection) {
+        PosDir newPosDir = element.posDir.move(moveDirection);
+
+        if(boundary.isInside(newPosDir.position())) {
+            return newPosDir;
+        } else if(boundary.isLeft(newPosDir.position())) {
             Vector2d newPosition = new Vector2d(boundary.upperRight().x, element.posDir.position().y);
-            return requestedPosDir.changePosition(newPosition);
-        } else if(boundary.isRight(requestedPosDir.position())) {
+            return newPosDir.changePosition(newPosition);
+        } else if(boundary.isRight(newPosDir.position())) {
             Vector2d newPosition = new Vector2d(boundary.lowerLeft().x, element.posDir.position().y);
-            return requestedPosDir.changePosition(newPosition);
+            return newPosDir.changePosition(newPosition);
         } else {
             return element.posDir.changeDirectionOpposite();
         }

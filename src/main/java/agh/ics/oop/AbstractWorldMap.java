@@ -22,7 +22,9 @@ public abstract class AbstractWorldMap implements IAnimalEventObserver {
 
     @Override
     public void animalEvent(AnimalEvent animalEvent) {
-        if(animalEvent instanceof PositionChangedEvent event) {
+        if(animalEvent instanceof BirthEvent event) {
+            mapElements.put(event.position, event.animal);
+        } else if(animalEvent instanceof PositionChangedEvent event) {
             mapElements.remove(event.oldPosition, event.animal);
             mapElements.put(event.newPosition, event.animal);
         } else if (animalEvent instanceof DeathEvent event) {
@@ -30,18 +32,13 @@ public abstract class AbstractWorldMap implements IAnimalEventObserver {
         }
     }
 
-    public boolean place(AbstractMapElement element) {
-        Vector2d position = element.getPosition();
+    public void place(Grass grass) {
+        Vector2d position = grass.getPosition();
         if(boundary.isInside(position)) {
-            if(element instanceof Animal animal) {
-                animal.addObserver(this);
-            }
-            mapElements.put(position, element);
+            mapElements.put(position, grass);
         } else {
             throw new IllegalArgumentException("Elements can't be placed on position: " + position);
         }
-
-        return true;
     }
 
     public boolean isOccupied(Vector2d position) {
@@ -65,5 +62,5 @@ public abstract class AbstractWorldMap implements IAnimalEventObserver {
                 );
     }
 
-    public abstract PosDir getPosDirToMove(AbstractMapElement element, PosDir requestedPosDir);
+    public abstract PosDir getPosDirToMove(AbstractMapElement element, MoveDirection move);
 }
