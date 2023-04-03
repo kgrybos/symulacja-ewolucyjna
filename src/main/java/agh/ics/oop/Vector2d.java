@@ -26,6 +26,14 @@ public class Vector2d {
         return x >= other.x && y >= other.y;
     }
 
+    public boolean isLeft(Vector2d other) {
+        return x < other.x;
+    }
+
+    public boolean isRight(Vector2d other) {
+        return x > other.x;
+    }
+
     public Vector2d add(Vector2d other) {
         return new Vector2d(x + other.x, y + other.y);
     }

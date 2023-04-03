@@ -1,7 +1,7 @@
 package agh.ics.oop.gui;
 
 import agh.ics.oop.AbstractWorldMap;
-import agh.ics.oop.IMapElement;
+import agh.ics.oop.AbstractMapElement;
 import agh.ics.oop.Vector2d;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
@@ -59,7 +59,7 @@ public class GraphicalMapVisualizer {
             for(int row = 0; row < numberOfRows; row++) {
                 Vector2d position = new Vector2d(lowerLeft.x + column, upperRight.y - row );
                 if(map.isOccupied(position)) {
-                    IMapElement element = map.objectAt(position);
+                    AbstractMapElement element = map.objectAt(position);
                     if(element != null) {
                         GuiElementBox geb = new GuiElementBox(element.getImageFilename(), element.toString());
                         GridPane.setHalignment(geb, HPos.CENTER);

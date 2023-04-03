@@ -4,49 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Animal extends AbstractMapElement {
-    private MapDirection orientation = MapDirection.NORTH;
+    private final List<IPositionChangeObserver> positionChangeObservers = new ArrayList<>();
     private final AbstractWorldMap worldMap;
 
-    private final List<IPositionChangeObserver> positionChangeObservers = new ArrayList<>();
-
-    public Animal(AbstractWorldMap map) {
-        worldMap = map;
-        position = new Vector2d(2, 2);
-    }
-
-    public Animal(AbstractWorldMap map, Vector2d initialPosition) {
-        worldMap = map;
-        position = initialPosition;
-    }
-
-    public MapDirection getOrientation() {
-        return orientation;
+    public Animal(AbstractWorldMap worldMap, Vector2d initialPosition) {
+        this.worldMap = worldMap;
+        this.posDir = new PosDir(initialPosition);
     }
 
     @Override
     public String toString() {
-        return "Z " + position;
+        return "Z " + posDir.position();
     }
 
     public void move(MoveDirection direction) {
-        orientation = switch(direction) {
-            case LEFT -> orientation.previous();
-            case RIGHT -> orientation.next();
-            default -> orientation;
-        };
-
-        Vector2d newPosition = switch (direction) {
-            case FORWARD -> position.add(orientation.toUnitVector());
-            case BACKWARD -> position.subtract(orientation.toUnitVector());
-            default -> position;
-        };
-
-        Vector2d oldPosition = position;
-        if(worldMap.canMoveTo(newPosition)) {
-            position = newPosition;
-        }
-        positionChanged(oldPosition, position);
-
+        Vector2d oldPosition = posDir.position();
+        PosDir newPosDir = posDir.move(direction);
+        posDir = worldMap.getPosDirToMove(this, newPosDir);
+        positionChanged(oldPosition, posDir.position());
     }
 
     public void addObserver(IPositionChangeObserver observer) {
@@ -65,6 +40,6 @@ public class Animal extends AbstractMapElement {
 
     @Override
     public String getImageFilename() {
-        return orientation.getFilename();
+        return posDir.direction().getFilename();
     }
 }
